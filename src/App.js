@@ -2,6 +2,7 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AddTransaction from './pages/AddTransaction/AddTransaction';
+import AllTransactions from './pages/AllTransactions/AllTransactions';
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AddTransaction/>}/>
+          <Route path="/alltransactions" element={<AllTransactions/>}/>
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { Link } from "react-router-dom";
 export default function AddTransaction() {
   const initialFormValues = {
     TransactionDate: "",
@@ -40,21 +40,10 @@ export default function AddTransaction() {
   };
 
   const handelFile = (File, e) => {
-    //================================================================
-
-    var file = File[0];
-    var reader = new FileReader();
-
-    reader.onload =  function () {
-      let base64String =  reader.result;
-
-      setFormValue((prev)=> {return  {...prev, ReceiptBase64: base64String }});
-      //console.log(base64String);
-    };
-    reader.readAsDataURL(file);
-
-    //================================================================
-    if (File[0].size > 1000000) {
+    
+    if (!(File[0].type === "image/png" ||
+    File[0].type === "image/jpg" ||
+    File[0].type === "image/jpeg")||File[0].size > 1000000) {
       setFormErr((prev) => {
         return {
           ...prev,
@@ -68,31 +57,39 @@ export default function AddTransaction() {
       });
     }
 
-    if (
-      !(
-        File[0].type === "image/png" ||
-        File[0].type === "image/jpg" ||
-        File[0].type === "image/jpeg"
-      )
-    ) {
-      setFormErr((prev) => {
-        return {
-          ...prev,
-          Receipt:
-            "receipt upload size should not exceed 1 MB, allow only .png .jpg .jpeg ",
-        };
-      });
-    } else {
-      setFormErr((prev) => {
-        return { ...prev, Receipt: "" };
-      });
-    }
+    
+
+
+
+      //================================================================
+
+      var file = File[0];
+      var reader = new FileReader();
+
+      reader.onload = function () {
+        let base64String = reader.result;
+
+        setFormValue((prev) => {
+          return { ...prev, ReceiptBase64: base64String };
+        });
+        //console.log(base64String);
+      };
+      reader.readAsDataURL(file);
+
+      //================================================================
+    
   };
   const handelOnSubmit = (e) => {
     e.preventDefault();
     console.log(formValue);
     let isFormValid = true;
+  
     Object.entries(formErr).forEach((x) => {
+      console.log(x)
+      if(x[1] ==="*")
+      {
+        setFormErr((prev)=>{return {...prev,[x[0]]:"this field is required"}})
+      }
       isFormValid = x[1] === "" && isFormValid;
     });
 
@@ -108,7 +105,7 @@ export default function AddTransaction() {
         isFormValid = false;
       }
 
-      if (formValue.Amount < 0) {
+      if (formValue.Amount <= 0) {
         setFormErr((prev) => {
           return { ...prev, Amount: "The amount should be greater than zero" };
         });
@@ -135,7 +132,9 @@ export default function AddTransaction() {
         localStorage.setItem("data", JSON.stringify([formValue]));
       }
 
-      console.log("dfsdf");
+      alert("Transaction is added successfully");
+    } else {
+      alert("some things went wrong");
     }
   };
 
@@ -300,7 +299,7 @@ export default function AddTransaction() {
         </div>
       </form>
 
-      {console.log(localStorage.getItem("data"))}
+      <Link to="/alltransactions">All Transaction </Link>
     </div>
   );
 }
@@ -340,3 +339,8 @@ export default function AddTransaction() {
 //     </div>
 //   );
 // };
+
+
+
+
+
