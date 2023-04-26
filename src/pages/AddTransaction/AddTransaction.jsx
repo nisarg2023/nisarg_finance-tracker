@@ -1,5 +1,41 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
+export const MonthYear =["Jan 2023",
+  "Feb 2023",
+  "Mar 2023",
+  "Arp 2023",
+  "May 2023",
+  "Jun 2023",
+  "Jul 2023",
+  "Aug 2023",
+  "Sep 2023",
+  "Oct 2023",
+  "Nov 2023",
+  "Des 2023"];
+
+  export const TransactionType = ["Transaction Type",
+  "Home Expense",
+  "Personal Expense",
+  "Income"]
+
+  export const FromAccount = ["Personal Account",
+  "Real Living",
+  "My Dream Home",
+  "Full Circle",
+  "Core Realtors",
+  "Big Block"
+  ]
+
+  export const ToAccount = ["Personal Account",
+  "Real Living",
+  "My Dream Home",
+  "Full Circle",
+  "Core Realtors",
+  "Big Block"
+  ]
+  
+
 export default function AddTransaction() {
   const initialFormValues = {
     TransactionDate: "",
@@ -22,6 +58,9 @@ export default function AddTransaction() {
     Receipt: "*",
     Notes: "*",
   };
+
+
+  
   const [formValue, setFormValue] = useState(initialFormValues);
   const [formErr, setFormErr] = useState(initialFormErr);
 
