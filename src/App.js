@@ -1,10 +1,16 @@
-import logo from './logo.svg';
+
 import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AddTransaction from './pages/AddTransaction/AddTransaction';
 
 function App() {
   return (
     <div className="App">
-      hello world
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<AddTransaction/>}/>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
