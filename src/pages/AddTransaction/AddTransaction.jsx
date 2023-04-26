@@ -9,6 +9,7 @@ export default function AddTransaction() {
     ToAccount: "",
     Amount: "",
     Receipt: "",
+    ReceiptBase64: "",
     Notes: "",
   };
   const initialFormErr = {
@@ -38,66 +39,103 @@ export default function AddTransaction() {
     }
   };
 
-  const handelFile = (File)=>{
-    //console.log(!(File[0].type==='image/png'||File[0].type==='image/jpg'||File[0].type==='image/jpeg')&& !File[0].size>1000000)
-    
-    
-    if(File[0].size>1000000 )
-    {
+  const handelFile = (File, e) => {
+    //================================================================
 
-      setFormErr(prev=>{return {...prev,Receipt:"receipt upload size should not exceed 1 MB, allow only .png .jpg .jpeg "}})
+    var file = File[0];
+    var reader = new FileReader();
+
+    reader.onload =  function () {
+      let base64String =  reader.result;
+
+      setFormValue((prev)=> {return  {...prev, ReceiptBase64: base64String }});
+      //console.log(base64String);
+    };
+    reader.readAsDataURL(file);
+
+    //================================================================
+    if (File[0].size > 1000000) {
+      setFormErr((prev) => {
+        return {
+          ...prev,
+          Receipt:
+            "receipt upload size should not exceed 1 MB, allow only .png .jpg .jpeg ",
+        };
+      });
+    } else {
+      setFormErr((prev) => {
+        return { ...prev, Receipt: "" };
+      });
     }
-    else{
-      setFormErr(prev=>{return {...prev,Receipt:""}})
+
+    if (
+      !(
+        File[0].type === "image/png" ||
+        File[0].type === "image/jpg" ||
+        File[0].type === "image/jpeg"
+      )
+    ) {
+      setFormErr((prev) => {
+        return {
+          ...prev,
+          Receipt:
+            "receipt upload size should not exceed 1 MB, allow only .png .jpg .jpeg ",
+        };
+      });
+    } else {
+      setFormErr((prev) => {
+        return { ...prev, Receipt: "" };
+      });
     }
-
-    if( !(File[0].type==='image/png'||File[0].type==='image/jpg'||File[0].type==='image/jpeg'))
-    {
-      
-      setFormErr(prev=>{return {...prev,Receipt:"receipt upload size should not exceed 1 MB, allow only .png .jpg .jpeg "}})
-    }
-    else{
-      setFormErr(prev=>{return {...prev,Receipt:""}})
-    }
-   
-
-
-
-    
-  }
+  };
   const handelOnSubmit = (e) => {
     e.preventDefault();
+    console.log(formValue);
     let isFormValid = true;
     Object.entries(formErr).forEach((x) => {
       isFormValid = x[1] === "" && isFormValid;
     });
 
-    if (isFormValid)
-    {
-        if(formValue.FromAccount===formValue.ToAccount)
-        {
-            setFormErr((prev)=> {return {...prev,ToAccount:"value of from account and to account is must be diffrent"}})
-            isFormValid = false
-        }
+    if (isFormValid) {
+      if (formValue.FromAccount === formValue.ToAccount) {
+        setFormErr((prev) => {
+          return {
+            ...prev,
+            ToAccount:
+              "value of from account and to account is must be diffrent",
+          };
+        });
+        isFormValid = false;
+      }
 
-        if(formValue.Amount<0)
-        {
-            setFormErr((prev)=> {return {...prev,Amount:"The amount should be greater than zero"}})
-            isFormValid = false
-        }
+      if (formValue.Amount < 0) {
+        setFormErr((prev) => {
+          return { ...prev, Amount: "The amount should be greater than zero" };
+        });
+        isFormValid = false;
+      }
 
-
-        if(formValue.Notes.length>10)
-        {
-            setFormErr((prev)=> {return {...prev,Notes:"notes should not cross 250 characters in length"}})
-            isFormValid = false
-        }
+      if (formValue.Notes.length > 250) {
+        setFormErr((prev) => {
+          return {
+            ...prev,
+            Notes: "notes should not cross 250 characters in length",
+          };
+        });
+        isFormValid = false;
+      }
     }
 
-  
-
     if (isFormValid) {
-      console.log("hello");
+      let localData = JSON.parse(localStorage.getItem("data"));
+      if (localData) {
+        let data = [...localData, formValue];
+        localStorage.setItem("data", JSON.stringify(data));
+      } else {
+        localStorage.setItem("data", JSON.stringify([formValue]));
+      }
+
+      console.log("dfsdf");
     }
   };
 
@@ -222,7 +260,6 @@ export default function AddTransaction() {
             onChange={(e) => {
               setFormValue({ ...formValue, Amount: e.target.value });
               isEmpty(e.target);
-              
             }}
           />
           <span>{formErr.Amount}</span>
@@ -230,13 +267,15 @@ export default function AddTransaction() {
 
         <div>
           <label htmlFor="Receipt : ">Receipt : </label>
-          <input type="file" name="Receipt" value={formValue.Receipt}
+          <input
+            type="file"
+            name="Receipt"
+            value={formValue.Receipt}
             onChange={(e) => {
-                setFormValue({ ...formValue, Receipt: e.target.value });
-                handelFile(e.target.files)
-            
-              
-            }}/>
+              setFormValue({ ...formValue, Receipt: e.target.value });
+              handelFile(e.target.files);
+            }}
+          />
           <span>{formErr.Receipt}</span>
         </div>
 
@@ -260,6 +299,8 @@ export default function AddTransaction() {
           <input type="submit" value="submit" />
         </div>
       </form>
+
+      {console.log(localStorage.getItem("data"))}
     </div>
   );
 }
