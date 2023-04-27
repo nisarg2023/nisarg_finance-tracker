@@ -76,6 +76,9 @@ export default function AllTransactions() {
     setOrderBy([...a.filter((ele) => ele.length !== 0)]);
   };
 
+
+  
+
   return (
     <>
       <div>
@@ -97,6 +100,8 @@ export default function AllTransactions() {
           <option value="FromAccount">From Account </option>
           <option value="ToAccount">To Account</option>
         </select>
+
+       
 
         {localData && orderBy.length === 0 ? (
           <div>

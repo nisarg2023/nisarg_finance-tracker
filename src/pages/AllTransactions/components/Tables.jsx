@@ -100,9 +100,37 @@ export default function Tables({ localData, tableTitle }) {
    // setData(cloneData);
   };
 
+  const handelSearch = (event) => {
+  
+    let tempdata   = [...localData]
+    
+   const newData = tempdata.filter((e)=>{
+        
+        let a =Object.entries(e);
+        a= a.map((ez) => ez[1]);
+        a.splice(8, 1);
+        a.splice(0, 1);
+        
+        
+        a = a.filter((ex) => {
+          return ex.toUpperCase().includes(event.target.value.toUpperCase());
+        });
+        console.log(a.length)
+
+
+
+        return  a.length!==0 && e
+    })
+
+    setData(newData)
+
+
+  };
+
   return (
     <>
-      <h3>{data[0][tableTitle]}</h3>
+      <h3>{data.length!==0 && data[0][tableTitle]}</h3>{" "}
+      <input type="text" onChange={(e) => handelSearch(e)} />
       <div className="table">
         <div className="row">
           <div
@@ -112,7 +140,6 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             Transaction Date{" "}
-            
           </div>
           <div
             className="col"
@@ -121,7 +148,6 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             Month Year
-            
           </div>
           <div
             className="col"
@@ -130,7 +156,6 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             Transaction Type
-           
           </div>
           <div
             className="col"
@@ -139,7 +164,6 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             From Account
-           
           </div>
           <div
             className="col"
@@ -148,7 +172,6 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             To Account
-           
           </div>
           <div
             className="col"
@@ -157,7 +180,6 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             Amount
-           
           </div>
           <div className="col">Receipt</div>
           <div
@@ -167,12 +189,11 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             Notes
-            
           </div>
           <div className="col">Action</div>
         </div>
 
-        {data.map((transection, index) => {
+        {data.length!==0 && data.map((transection, index) => {
           return (
             <div className="row" key={index}>
               <div className="col">{transection.TransactionDate}</div>
@@ -196,8 +217,8 @@ export default function Tables({ localData, tableTitle }) {
               </div>
               <div className="col">{transection.Notes}</div>
               <div className="col">
-               <Link to={`/view/${transection.id}`}>view</Link>
-                </div>
+                <Link to={`/view/${transection.id}`}>view</Link>
+              </div>
             </div>
           );
         })}
