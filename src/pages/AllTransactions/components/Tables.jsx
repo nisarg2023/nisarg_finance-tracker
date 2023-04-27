@@ -129,7 +129,7 @@ export default function Tables({ localData, tableTitle }) {
 
   return (
     <>
-      <h3>{data.length!==0 && data[0][tableTitle]}</h3>{" "}
+      <h3>{data.length !== 0 && data[0][tableTitle]}</h3>{" "}
       <input type="text" onChange={(e) => handelSearch(e)} />
       <div className="table">
         <div className="row">
@@ -191,37 +191,43 @@ export default function Tables({ localData, tableTitle }) {
             Notes
           </div>
           <div className="col">Action</div>
+          <div className="col">Update</div>
         </div>
 
-        {data.length!==0 && data.map((transection, index) => {
-          return (
-            <div className="row" key={index}>
-              <div className="col">{transection.TransactionDate}</div>
-              <div className="col">{transection.MonthYear}</div>
-              <div className="col">{transection.TransactionType}</div>
-              <div className="col">{transection.FromAccount}</div>
-              <div className="col">{transection.ToAccount} </div>
-              <div className="col">
-                {Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "INR",
-                }).format(transection.Amount)}
+        {data.length !== 0 &&
+          data.map((transection, index) => {
+            return (
+              <div className="row" key={index}>
+                <div className="col">{transection.TransactionDate}</div>
+                <div className="col">{transection.MonthYear}</div>
+                <div className="col">{transection.TransactionType}</div>
+                <div className="col">{transection.FromAccount}</div>
+                <div className="col">{transection.ToAccount} </div>
+                <div className="col">
+                  {Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "INR",
+                  }).format(transection.Amount)}
+                </div>
+                <div className="col">
+                  {" "}
+                  <img
+                    src={transection.ReceiptBase64}
+                    style={{ width: "80px" }}
+                    alt=""
+                  />{" "}
+                </div>
+                <div className="col">{transection.Notes}</div>
+                <div className="col">
+                  <Link to={`/view/${transection.id}`}>view</Link>
+                </div>
+
+                <div className="col">
+                  <Link to={`/update/${transection.id}`}>update</Link>
+                </div>
               </div>
-              <div className="col">
-                {" "}
-                <img
-                  src={transection.ReceiptBase64}
-                  style={{ width: "80px" }}
-                  alt=""
-                />{" "}
-              </div>
-              <div className="col">{transection.Notes}</div>
-              <div className="col">
-                <Link to={`/view/${transection.id}`}>view</Link>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </>
   );

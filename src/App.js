@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AddTransaction from './pages/AddTransaction/AddTransaction';
 import AllTransactions from './pages/AllTransactions/AllTransactions';
 import ViewTransaction from './pages/ViewTransaction/ViewTransaction';
+import UpdateTransaction from './pages/UpdateTransaction/UpdateTransaction';
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
           <Route path="/" element={<AddTransaction/>}/>
           <Route path="/alltransactions" element={<AllTransactions/>}/>
           <Route path="/view/:id" element={<ViewTransaction/>} />
+          <Route path="/update/:id" element={<UpdateTransaction />} />
+
         </Routes>
       </BrowserRouter>
     </div>

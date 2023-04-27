@@ -41,8 +41,8 @@ export const ToAccount = [
   "Big Block",
 ];
 
-export default function AddTransaction() {
-  const initialFormValues = {
+export default function AddTransaction({ localFormValue, index, isUpdate }) {
+  const initialFormValues = localFormValue || {
     id: "",
     TransactionDate: "",
     MonthYear: "",
@@ -54,25 +54,36 @@ export default function AddTransaction() {
     ReceiptBase64: "",
     Notes: "",
   };
-  const initialFormErr = {
-    TransactionDate: "*",
-    MonthYear: "*",
-    TransactionType: "*",
-    FromAccount: "*",
-    ToAccount: "*",
-    Amount: "*",
-    Receipt: "*",
-    Notes: "*",
-  };
+  const initialFormErr = localFormValue
+    ? {
+        TransactionDate: "",
+        MonthYear: "",
+        TransactionType: "",
+        FromAccount: "",
+        ToAccount: "",
+        Amount: "",
+        Receipt: "",
+        Notes: "",
+      }
+    : {
+        TransactionDate: "*",
+        MonthYear: "*",
+        TransactionType: "*",
+        FromAccount: "*",
+        ToAccount: "*",
+        Amount: "*",
+        Receipt: "*",
+        Notes: "*",
+      };
 
   const [formValue, setFormValue] = useState(initialFormValues);
   const [formErr, setFormErr] = useState(initialFormErr);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const id = localStorage.getItem("data")?
-     (JSON.parse(localStorage.getItem("data")).length + 1):
-     (1)
+    const id = localStorage.getItem("data")
+      ? JSON.parse(localStorage.getItem("data")).length + 1
+      : 1;
 
     console.log(id);
 
@@ -181,8 +192,13 @@ export default function AddTransaction() {
     if (isFormValid) {
       let localData = JSON.parse(localStorage.getItem("data"));
       if (localData) {
-        let data = [...localData, formValue];
-        localStorage.setItem("data", JSON.stringify(data));
+        if (isUpdate) {
+          localData.splice(index, 1, formValue);
+          localStorage.setItem("data", JSON.stringify(localData));
+        } else {
+          let data = [...localData, formValue];
+          localStorage.setItem("data", JSON.stringify(data));
+        }
       } else {
         localStorage.setItem("data", JSON.stringify([formValue]));
       }
@@ -345,12 +361,12 @@ export default function AddTransaction() {
             </div>
           </div>
 
-          <div className="input_div">
+         {!isUpdate&& <div className="input_div">
             <div className="left_div">
               <label htmlFor="Receipt : ">Receipt : </label>
             </div>
 
-            <div className="right_div">
+             <div className="right_div">
               <input
                 type="file"
                 name="Receipt"
@@ -361,8 +377,8 @@ export default function AddTransaction() {
                 }}
               />
               <span>{formErr.Receipt}</span>
-            </div>
-          </div>
+            </div> 
+          </div>}
 
           <div className="input_div">
             <div className="left_div">
