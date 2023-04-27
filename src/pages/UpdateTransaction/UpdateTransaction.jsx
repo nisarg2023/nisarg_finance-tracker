@@ -6,6 +6,8 @@ export default function UpdateTransaction() {
     const { id } = useParams();
     const data = JSON.parse(localStorage.getItem("data"));
     const index = data.findIndex((ele) => ele.id == id);
+    console.log(index)
+    console.table(data[index]);
   return (
     <div>
       <AddTransaction localFormValue={data[index]} index={index} isUpdate={true}/>

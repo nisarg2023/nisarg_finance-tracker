@@ -81,15 +81,17 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const id = localStorage.getItem("data")
-      ? JSON.parse(localStorage.getItem("data")).length + 1
-      : 1;
+    if (!isUpdate) {
+      const id = localStorage.getItem("data")
+        ? JSON.parse(localStorage.getItem("data")).length + 1
+        : 1;
 
-    console.log(id);
+      console.log(id);
 
-    setFormValue((prev) => {
-      return { ...prev, id: id };
-    });
+      setFormValue((prev) => {
+        return { ...prev, id: id };
+      });
+    }
   }, []);
 
   const isEmpty = (input) => {
@@ -361,24 +363,26 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
             </div>
           </div>
 
-         {!isUpdate&& <div className="input_div">
-            <div className="left_div">
-              <label htmlFor="Receipt : ">Receipt : </label>
-            </div>
+          {!isUpdate && (
+            <div className="input_div">
+              <div className="left_div">
+                <label htmlFor="Receipt : ">Receipt : </label>
+              </div>
 
-             <div className="right_div">
-              <input
-                type="file"
-                name="Receipt"
-                value={formValue.Receipt}
-                onChange={(e) => {
-                  setFormValue({ ...formValue, Receipt: e.target.value });
-                  handelFile(e.target.files);
-                }}
-              />
-              <span>{formErr.Receipt}</span>
-            </div> 
-          </div>}
+              <div className="right_div">
+                <input
+                  type="file"
+                  name="Receipt"
+                  value={formValue.Receipt}
+                  onChange={(e) => {
+                    setFormValue({ ...formValue, Receipt: e.target.value });
+                    handelFile(e.target.files);
+                  }}
+                />
+                <span>{formErr.Receipt}</span>
+              </div>
+            </div>
+          )}
 
           <div className="input_div">
             <div className="left_div">
