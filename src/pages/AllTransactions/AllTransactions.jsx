@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ToAccount,
@@ -10,6 +10,7 @@ import Tables from "./components/Tables";
 
 export default function AllTransactions() {
   let localData = JSON.parse(localStorage.getItem("data"));
+  
   const [data, setData] = useState(localData);
 
   const [orderBy, setOrderBy] = useState([]);
@@ -68,48 +69,52 @@ export default function AllTransactions() {
         break;
       }
       default: {
+        a.push(data)
       }
     }
-    console.log([...a.filter((ele) => ele.length !== 0)]);
+    
     setOrderBy([...a.filter((ele) => ele.length !== 0)]);
   };
 
   return (
-    <div>
-      <Link to="/">Add new Transection</Link>
+    <>
+      <div>
+        <Link to="/">Add new Transection</Link>
 
-      <select
-        name="orderBy"
-        id=""
-        onChange={(e) => {
-          handelOrderBy(e);
-        }}
-      >
-        <option value="" disabled hidden selected>
-          select{" "}
-        </option>
-        <option value="MonthYear">Month Year </option>
-        <option value="TransactionType">Transaction Type </option>
-        <option value="FromAccount">From Account </option>
-        <option value="ToAccount">To Account</option>
-      </select>
+        <select
+          name="orderBy"
+          id=""
+          onChange={(e) => {
+            handelOrderBy(e);
+          }}
+        >
+          <option value="" disabled hidden selected>
+            select{" "}
+          </option>
+          <option value="none">none </option>
+          <option value="MonthYear">Month Year </option>
+          <option value="TransactionType">Transaction Type </option>
+          <option value="FromAccount">From Account </option>
+          <option value="ToAccount">To Account</option>
+        </select>
 
-      {orderBy.length === 0 ? (
-        <div>
-          <Tables localData={data} tableTitle={tableTitle} />
-        </div>
-      ) : (
-        orderBy.map((value, index) => {
-          return (
-            <div key={index}>
-              <Tables localData={value} tableTitle={tableTitle} />
+        {localData && orderBy.length === 0 ? (
+          <div>
+            <Tables localData={data.reverse()} tableTitle={tableTitle} />
+          </div>
+        ) : (
+          orderBy.map((value, index) => {
+            return (
+              <div key={index}>
+                <Tables localData={value} tableTitle={tableTitle} />
 
-              <hr />
-              <hr />
-            </div>
-          );
-        })
-      )}
-    </div>
+                <hr />
+                <hr />
+              </div>
+            );
+          })
+        )}
+      </div>
+    </>
   );
 }

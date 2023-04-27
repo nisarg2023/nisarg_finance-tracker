@@ -1,0 +1,45 @@
+
+.container{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    padding: 1rem ;
+    border: 3px solid #070A52;
+    margin-inline: 6rem;
+    background-color: #394867;
+    
+    
+}
+.image{
+    border: 3px solid #070A52;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: #9BA4B5 0px 5px 15px;
+    
+}
+.image img{
+    width: 300px;
+}
+
+.detail
+{
+    padding: 1rem;
+}
+.detail p
+{
+    display: inline-block;
+    line-height: 0.5rem;
+    margin-left: 1rem;
+    font-size: 20px;
+    font-weight: 400;
+    color: #F1F6F9;
+}
+
+.detail label {
+    
+    line-height: 0.5rem;
+    margin-left: 1rem;
+    font-size: 20px;
+    font-weight: 600;
+    color: #FFF3E2;
+}

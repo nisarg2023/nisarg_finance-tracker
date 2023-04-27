@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "./style.css";
 
 export default function Tables({ localData, tableTitle }) {
+ 
   const [sortDirection, setSortDirection] = useState(false);
   const [data, setData] = useState(localData);
+  const [sort, setSort] = useState({ key: null, sortDirection: "asc" });
 
   useEffect(() => {
     setData(localData);
@@ -10,43 +14,82 @@ export default function Tables({ localData, tableTitle }) {
 
   const hanelSort = (field, type = "string") => {
     const cloneData = [...data];
+
+
+    
+
     switch (type) {
       case "string": {
-        sortDirection
-          ? cloneData.sort((a, b) => {
-              if (a[field][0] > b[field][0]) return -1;
-              if (a[field][0] < b[field[0]]) return 1;
-              return 0;
-            })
-          : cloneData.sort((a, b) => {
-              if (a[field][0] < b[field][0]) return -1;
-              if (a[field][0] > b[field[0]]) return 1;
-              return 0;
-            });
+            if (!(sort.key == field) || sort.sortDirection === "asc") {
+            
+              cloneData.sort((a, b) => {
+                if (a[field][0] < b[field][0]) return -1;
+                if (a[field][0] > b[field[0]]) return 1;
+                return 0;
+              });
 
-        setSortDirection(!sortDirection);
+              setData(cloneData);
+              setSort({ key: field, sortDirection: "desc" });
+            } else if (sort.sortDirection === "desc") {
+            
+              cloneData.sort((a, b) => {
+                if (a[field][0] > b[field][0]) return -1;
+                if (a[field][0] < b[field[0]]) return 1;
+                return 0;
+              });
+              setData(cloneData);
+              setSort({ key: field, sortDirection: null });
+            } else {
+              setData(localData);
+              setSort({ key: field, sortDirection: "asc" });
+            }
+      
         break;
       }
       case "number": {
-        sortDirection
-          ? cloneData.sort((a, b) => {
-              return b[field] - a[field];
-            })
-          : cloneData.sort((a, b) => {
-              return a[field] - b[field];
-            });
-        setSortDirection(!sortDirection);
+        
+        
+
+       if (!(sort.key == field) || sort.sortDirection === "asc") {
+        
+         cloneData.sort((a, b) => {
+           return a[field] - b[field];
+         });
+
+         setData(cloneData);
+         setSort({ key: field, sortDirection: "desc" });
+       } else if (sort.sortDirection === "desc") {
+        
+         cloneData.sort((a, b) => {
+           return b[field] - a[field];
+         });
+         setData(cloneData);
+         setSort({ key: field, sortDirection: null });
+       } else {
+      
+         setData(localData);
+         setSort({ key: field, sortDirection: "asc" });
+       }
         break;
       }
       case "date": {
-        sortDirection
-          ? cloneData.sort((a, b) => {
-              return new Date(b[field]) - new Date(a[field]);
-            })
-          : cloneData.sort((a, b) => {
-              return new Date(a[field]) - new Date(b[field]);
-            });
-        setSortDirection(!sortDirection);
+        if (!(sort.key == field) || sort.sortDirection === "asc") {
+          cloneData.sort((a, b) => {
+            return new Date(a[field]) - new Date(b[field]);
+          });
+
+          setData(cloneData);
+          setSort({ key: field, sortDirection: "desc" });
+        } else if (sort.sortDirection === "desc") {
+          cloneData.sort((a, b) => {
+            return new Date(b[field]) - new Date(a[field]);
+          });
+          setData(cloneData);
+          setSort({ key: field, sortDirection: null });
+        } else {
+          setData(localData);
+          setSort({ key: field, sortDirection: "asc" });
+        }
         break;
       }
       default: {
@@ -54,7 +97,7 @@ export default function Tables({ localData, tableTitle }) {
       }
     }
 
-    setData(cloneData);
+   // setData(cloneData);
   };
 
   return (
@@ -68,7 +111,8 @@ export default function Tables({ localData, tableTitle }) {
               hanelSort("TransactionDate", "date");
             }}
           >
-            Transaction Date
+            Transaction Date{" "}
+            
           </div>
           <div
             className="col"
@@ -77,6 +121,7 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             Month Year
+            
           </div>
           <div
             className="col"
@@ -85,6 +130,7 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             Transaction Type
+           
           </div>
           <div
             className="col"
@@ -93,6 +139,7 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             From Account
+           
           </div>
           <div
             className="col"
@@ -100,7 +147,8 @@ export default function Tables({ localData, tableTitle }) {
               hanelSort("ToAccount");
             }}
           >
-            To Account{" "}
+            To Account
+           
           </div>
           <div
             className="col"
@@ -109,6 +157,7 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             Amount
+           
           </div>
           <div className="col">Receipt</div>
           <div
@@ -118,6 +167,7 @@ export default function Tables({ localData, tableTitle }) {
             }}
           >
             Notes
+            
           </div>
           <div className="col">Action</div>
         </div>
@@ -130,7 +180,12 @@ export default function Tables({ localData, tableTitle }) {
               <div className="col">{transection.TransactionType}</div>
               <div className="col">{transection.FromAccount}</div>
               <div className="col">{transection.ToAccount} </div>
-              <div className="col">{transection.Amount}</div>
+              <div className="col">
+                {Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "INR",
+                }).format(transection.Amount)}
+              </div>
               <div className="col">
                 {" "}
                 <img
@@ -140,7 +195,9 @@ export default function Tables({ localData, tableTitle }) {
                 />{" "}
               </div>
               <div className="col">{transection.Notes}</div>
-              <div className="col">view</div>
+              <div className="col">
+               <Link to={`/view/${transection.id}`}>view</Link>
+                </div>
             </div>
           );
         })}
@@ -148,3 +205,5 @@ export default function Tables({ localData, tableTitle }) {
     </>
   );
 }
+
+

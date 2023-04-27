@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #F6FFDE;
 }
 
 code {
@@ -30,4 +31,24 @@ span{
   padding: 8px;
   line-height: 1.42857143;
   vertical-align: top;
+  max-width: 200px;
+}
+
+.input_div{
+  display: flex;
+  min-width: 450px;
+}
+.left_div{
+  width:140px;
+  padding: .8rem;
+}
+.right_div{
+width: auto;
+padding: 0.8rem;
+}
+.formContainer{
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

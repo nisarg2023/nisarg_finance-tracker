@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-export const MonthYear =["Jan 2023",
+export const MonthYear = [
+  "Jan 2023",
   "Feb 2023",
   "Mar 2023",
   "Arp 2023",
@@ -12,32 +13,37 @@ export const MonthYear =["Jan 2023",
   "Sep 2023",
   "Oct 2023",
   "Nov 2023",
-  "Des 2023"];
+  "Des 2023",
+];
 
-  export const TransactionType = ["Transaction Type",
+export const TransactionType = [
+  "Transaction Type",
   "Home Expense",
   "Personal Expense",
-  "Income"]
+  "Income",
+];
 
-  export const FromAccount = ["Personal Account",
+export const FromAccount = [
+  "Personal Account",
   "Real Living",
   "My Dream Home",
   "Full Circle",
   "Core Realtors",
-  "Big Block"
-  ]
+  "Big Block",
+];
 
-  export const ToAccount = ["Personal Account",
+export const ToAccount = [
+  "Personal Account",
   "Real Living",
   "My Dream Home",
   "Full Circle",
   "Core Realtors",
-  "Big Block"
-  ]
-  
+  "Big Block",
+];
 
 export default function AddTransaction() {
   const initialFormValues = {
+    id: "",
     TransactionDate: "",
     MonthYear: "",
     TransactionType: "",
@@ -59,10 +65,21 @@ export default function AddTransaction() {
     Notes: "*",
   };
 
-
-  
   const [formValue, setFormValue] = useState(initialFormValues);
   const [formErr, setFormErr] = useState(initialFormErr);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const id = localStorage.getItem("data")?
+     (JSON.parse(localStorage.getItem("data")).length + 1):
+     (1)
+
+    console.log(id);
+
+    setFormValue((prev) => {
+      return { ...prev, id: id };
+    });
+  }, []);
 
   const isEmpty = (input) => {
     if (input.value.trim() === "") {
@@ -79,10 +96,14 @@ export default function AddTransaction() {
   };
 
   const handelFile = (File, e) => {
-    
-    if (!(File[0].type === "image/png" ||
-    File[0].type === "image/jpg" ||
-    File[0].type === "image/jpeg")||File[0].size > 1000000) {
+    if (
+      !(
+        File[0].type === "image/png" ||
+        File[0].type === "image/jpg" ||
+        File[0].type === "image/jpeg"
+      ) ||
+      File[0].size > 1000000
+    ) {
       setFormErr((prev) => {
         return {
           ...prev,
@@ -96,38 +117,33 @@ export default function AddTransaction() {
       });
     }
 
-    
+    //================================================================
 
+    var file = File[0];
+    var reader = new FileReader();
 
+    reader.onload = function () {
+      let base64String = reader.result;
 
-      //================================================================
+      setFormValue((prev) => {
+        return { ...prev, ReceiptBase64: base64String };
+      });
+      //console.log(base64String);
+    };
+    reader.readAsDataURL(file);
 
-      var file = File[0];
-      var reader = new FileReader();
-
-      reader.onload = function () {
-        let base64String = reader.result;
-
-        setFormValue((prev) => {
-          return { ...prev, ReceiptBase64: base64String };
-        });
-        //console.log(base64String);
-      };
-      reader.readAsDataURL(file);
-
-      //================================================================
-    
+    //================================================================
   };
   const handelOnSubmit = (e) => {
     e.preventDefault();
-    console.log(formValue);
+    console.table(formValue);
     let isFormValid = true;
-  
+
     Object.entries(formErr).forEach((x) => {
-      console.log(x)
-      if(x[1] ==="*")
-      {
-        setFormErr((prev)=>{return {...prev,[x[0]]:"this field is required"}})
+      if (x[1] === "*") {
+        setFormErr((prev) => {
+          return { ...prev, [x[0]]: "this field is required" };
+        });
       }
       isFormValid = x[1] === "" && isFormValid;
     });
@@ -171,7 +187,9 @@ export default function AddTransaction() {
         localStorage.setItem("data", JSON.stringify([formValue]));
       }
 
-      alert("Transaction is added successfully");
+      // alert("Transaction is added successfully");
+
+      navigate("/alltransactions");
     } else {
       alert("some things went wrong");
     }
@@ -179,162 +197,196 @@ export default function AddTransaction() {
 
   return (
     <div>
-      <form onSubmit={(e) => handelOnSubmit(e)}>
-        <div>
-          <label htmlFor="TransactionDate:">Transaction Date:</label>
-          <input
-            type="date"
-            name="TransactionDate"
-            value={formValue.TransactionDate}
-            onChange={(e) => {
-              setFormValue({ ...formValue, TransactionDate: e.target.value });
-              isEmpty(e.target);
-            }}
-          />
-          <span>{formErr.TransactionDate}</span>
-        </div>
+      <form
+        onSubmit={async (e) => {
+          handelOnSubmit(e);
+        }}
+      >
+        <div className="formContainer">
+          <div className="input_div">
+            <div className="left_div">
+              <label htmlFor="TransactionDate:">Transaction Date:</label>
+            </div>
+            <div className="right_div">
+              <input
+                type="date"
+                name="TransactionDate"
+                value={formValue.TransactionDate}
+                onChange={(e) => {
+                  setFormValue({
+                    ...formValue,
+                    TransactionDate: e.target.value,
+                  });
+                  isEmpty(e.target);
+                }}
+              />
+              <span>{formErr.TransactionDate}</span>
+            </div>
+          </div>
 
-        <div>
-          <label htmlFor="MonthYear">Month Year</label>
-          <select
-            name="MonthYear"
-            value={formValue.MonthYear}
-            onChange={(e) => {
-              setFormValue({ ...formValue, MonthYear: e.target.value });
-              isEmpty(e.target);
-            }}
-          >
-            <option value="" desable selectde hidden>
-              select
-            </option>
-            <option value="Jan 2023">Jan 2023</option>
-            <option value="Feb 2023">Feb 2023</option>
-            <option value="Mar 2023">Mar 2023</option>
-            <option value="Arp 2023">Arp 2023</option>
-            <option value="May 2023">May 2023</option>
-            <option value="Jun 2023">Jun 2023</option>
-            <option value="Jul 2023">Jul 2023</option>
-            <option value="Aug 2023">Aug 2023</option>
-            <option value="Sep 2023">Sep 2023</option>
-            <option value="Oct 2023">Oct 2023</option>
-            <option value="Nov 2023">Nov 2023</option>
-            <option value="Des 2023">Des 2023</option>
-          </select>{" "}
-          <span>{formErr.MonthYear}</span>
-        </div>
+          <div className="input_div">
+            <div className="left_div">
+              <label htmlFor="MonthYear">Month Year</label>
+            </div>
+            <div className="right_div">
+              <select
+                name="MonthYear"
+                value={formValue.MonthYear}
+                onChange={(e) => {
+                  setFormValue({ ...formValue, MonthYear: e.target.value });
+                  isEmpty(e.target);
+                }}
+              >
+                <option value="" desable selectde hidden>
+                  select
+                </option>
+                {MonthYear.map((val) => (
+                  <option value={val}>{val}</option>
+                ))}
+              </select>{" "}
+              <span>{formErr.MonthYear}</span>
+            </div>
+          </div>
 
-        <div>
-          <label htmlFor="TransactionType">Transaction Type :</label>
-          <select
-            name="TransactionType"
-            value={formValue.TransactionType}
-            onChange={(e) => {
-              setFormValue({ ...formValue, TransactionType: e.target.value });
-              isEmpty(e.target);
-            }}
-          >
-            <option value="" desable selectde hidden>
-              select
-            </option>
-            <option value="Home Expense">Home Expense</option>
-            <option value="Personal Expense">Personal Expense</option>
-            <option value="Income">Income</option>
-          </select>
-          <span>{formErr.TransactionType}</span>
-        </div>
+          <div className="input_div">
+            <div className="left_div">
+              <label htmlFor="TransactionType">Transaction Type :</label>
+            </div>
 
-        <div>
-          <label htmlFor="FromAccount">FromAccount</label>
-          <select
-            name="FromAccount"
-            value={formValue.FromAccount}
-            onChange={(e) => {
-              setFormValue({ ...formValue, FromAccount: e.target.value });
-              isEmpty(e.target);
-            }}
-          >
-            <option value="" desable selectde hidden>
-              select
-            </option>
-            <option value="Personal Account">Personal Account</option>
-            <option value="Real Living">Real Living</option>
-            <option value="My Dream Home">My Dream Home</option>
-            <option value="Full Circle">Full Circle</option>
-            <option value="Core Realtors">Core Realtors</option>
-            <option value="Big Block">Big Block</option>
-          </select>
-          <span>{formErr.FromAccount}</span>
-        </div>
+            <div className="right_div">
+              <select
+                name="TransactionType"
+                value={formValue.TransactionType}
+                onChange={(e) => {
+                  setFormValue({
+                    ...formValue,
+                    TransactionType: e.target.value,
+                  });
+                  isEmpty(e.target);
+                }}
+              >
+                <option value="" desable selectde hidden>
+                  select
+                </option>
+                {TransactionType.map((val) => (
+                  <option value={val}>{val}</option>
+                ))}
+              </select>
+              <span>{formErr.TransactionType}</span>
+            </div>
+          </div>
 
-        <div>
-          <label htmlFor="ToAccount">To Account</label>
-          <select
-            name="ToAccount"
-            value={formValue.ToAccount}
-            onChange={(e) => {
-              setFormValue({ ...formValue, ToAccount: e.target.value });
-              isEmpty(e.target);
-            }}
-          >
-            <option value="" desable selectde hidden>
-              select
-            </option>
-            <option value="Personal Account">Personal Account</option>
-            <option value="Real Living">Real Living</option>
-            <option value="My Dream Home">My Dream Home</option>
-            <option value="Full Circle">Full Circle</option>
-            <option value="Core Realtors">Core Realtors</option>
-            <option value="Big Block">Big Block</option>
-          </select>
-          <span>{formErr.ToAccount}</span>
-        </div>
+          <div className="input_div">
+            <div className="left_div">
+              <label htmlFor="FromAccount">FromAccount</label>
+            </div>
 
-        <div>
-          <label htmlFor="Amount">Amount : </label>
-          <input
-            type="number"
-            name="Amount"
-            value={formValue.Amount}
-            onChange={(e) => {
-              setFormValue({ ...formValue, Amount: e.target.value });
-              isEmpty(e.target);
-            }}
-          />
-          <span>{formErr.Amount}</span>
-        </div>
+            <div className="right_div">
+              <select
+                name="FromAccount"
+                value={formValue.FromAccount}
+                onChange={(e) => {
+                  setFormValue({ ...formValue, FromAccount: e.target.value });
+                  isEmpty(e.target);
+                }}
+              >
+                <option value="" desable selectde hidden>
+                  select
+                </option>
+                {FromAccount.map((val) => (
+                  <option value={val}>{val}</option>
+                ))}
+              </select>
+              <span>{formErr.FromAccount}</span>
+            </div>
+          </div>
 
-        <div>
-          <label htmlFor="Receipt : ">Receipt : </label>
-          <input
-            type="file"
-            name="Receipt"
-            value={formValue.Receipt}
-            onChange={(e) => {
-              setFormValue({ ...formValue, Receipt: e.target.value });
-              handelFile(e.target.files);
-            }}
-          />
-          <span>{formErr.Receipt}</span>
-        </div>
+          <div className="input_div">
+            <div className="left_div">
+              <label htmlFor="ToAccount">To Account</label>
+            </div>
 
-        <div>
-          <label htmlFor="Notes">Notes</label>
-          <textarea
-            name="Notes"
-            id=""
-            cols="20"
-            rows="3"
-            value={formValue.Notes}
-            onChange={(e) => {
-              setFormValue({ ...formValue, Notes: e.target.value });
-              isEmpty(e.target);
-            }}
-          ></textarea>
-          <span>{formErr.Notes}</span>
-        </div>
+            <div className="right_div">
+              <select
+                name="ToAccount"
+                value={formValue.ToAccount}
+                onChange={(e) => {
+                  setFormValue({ ...formValue, ToAccount: e.target.value });
+                  isEmpty(e.target);
+                }}
+              >
+                <option value="" desable selectde hidden>
+                  select
+                </option>
+                {ToAccount.map((val) => (
+                  <option value={val}>{val}</option>
+                ))}
+              </select>
+              <span>{formErr.ToAccount}</span>
+            </div>
+          </div>
 
-        <div>
-          <input type="submit" value="submit" />
+          <div className="input_div">
+            <div className="left_div">
+              <label htmlFor="Amount">Amount : </label>
+            </div>
+
+            <div className="right_div">
+              <input
+                type="number"
+                name="Amount"
+                value={formValue.Amount}
+                onChange={(e) => {
+                  setFormValue({ ...formValue, Amount: e.target.value });
+                  isEmpty(e.target);
+                }}
+              />
+              <span>{formErr.Amount}</span>
+            </div>
+          </div>
+
+          <div className="input_div">
+            <div className="left_div">
+              <label htmlFor="Receipt : ">Receipt : </label>
+            </div>
+
+            <div className="right_div">
+              <input
+                type="file"
+                name="Receipt"
+                value={formValue.Receipt}
+                onChange={(e) => {
+                  setFormValue({ ...formValue, Receipt: e.target.value });
+                  handelFile(e.target.files);
+                }}
+              />
+              <span>{formErr.Receipt}</span>
+            </div>
+          </div>
+
+          <div className="input_div">
+            <div className="left_div">
+              <label htmlFor="Notes">Notes</label>
+            </div>
+            <div className="right_div">
+              <textarea
+                name="Notes"
+                id=""
+                cols="20"
+                rows="3"
+                value={formValue.Notes}
+                onChange={(e) => {
+                  setFormValue({ ...formValue, Notes: e.target.value });
+                  isEmpty(e.target);
+                }}
+              ></textarea>
+              <span>{formErr.Notes}</span>
+            </div>
+          </div>
+
+          <div>
+            <input type="submit" value="submit" />
+          </div>
         </div>
       </form>
 
@@ -378,8 +430,3 @@ export default function AddTransaction() {
 //     </div>
 //   );
 // };
-
-
-
-
-
