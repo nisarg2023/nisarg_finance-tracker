@@ -2,74 +2,80 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./style.css";
 
-export default function Tables({ localData, tableTitle }) {
- 
-  const [sortDirection, setSortDirection] = useState(false);
-  const [data, setData] = useState(localData);
+export default function Tables({ local_Data, tableTitle }) {
+  const RECORD_PER_PAGE = 1;
+  const TOTAL_NUMBER_OF_PAGES = Math.ceil(local_Data.length / RECORD_PER_PAGE);
+  const [data, setData] = useState([]);
+  const [currentPageNo, setCurrentPageNo] = useState(0);
   const [sort, setSort] = useState({ key: null, sortDirection: "asc" });
 
   useEffect(() => {
-    setData(localData);
-  }, [localData]);
+    const tempData = local_Data;
+    setData(tempData.slice(0, RECORD_PER_PAGE));
+    // setData(local_Data);
+  }, []);
+
+  const handelClickOnPageNumbe = (current) => {
+    if (!(current < 0 || current > TOTAL_NUMBER_OF_PAGES - 1)) {
+      const tempData = local_Data;
+      setData(
+        tempData.slice(
+          RECORD_PER_PAGE * current,
+          RECORD_PER_PAGE * current + RECORD_PER_PAGE
+        )
+      );
+      setCurrentPageNo(current);
+      
+    }
+  };
 
   const hanelSort = (field, type = "string") => {
     const cloneData = [...data];
 
-
-    
-
     switch (type) {
       case "string": {
-            if (!(sort.key == field) || sort.sortDirection === "asc") {
-            
-              cloneData.sort((a, b) => {
-                if (a[field][0] < b[field][0]) return -1;
-                if (a[field][0] > b[field[0]]) return 1;
-                return 0;
-              });
+        if (!(sort.key == field) || sort.sortDirection === "asc") {
+          cloneData.sort((a, b) => {
+            if (a[field][0] < b[field][0]) return -1;
+            if (a[field][0] > b[field[0]]) return 1;
+            return 0;
+          });
 
-              setData(cloneData);
-              setSort({ key: field, sortDirection: "desc" });
-            } else if (sort.sortDirection === "desc") {
-            
-              cloneData.sort((a, b) => {
-                if (a[field][0] > b[field][0]) return -1;
-                if (a[field][0] < b[field[0]]) return 1;
-                return 0;
-              });
-              setData(cloneData);
-              setSort({ key: field, sortDirection: null });
-            } else {
-              setData(localData);
-              setSort({ key: field, sortDirection: "asc" });
-            }
-      
+          setData(cloneData);
+          setSort({ key: field, sortDirection: "desc" });
+        } else if (sort.sortDirection === "desc") {
+          cloneData.sort((a, b) => {
+            if (a[field][0] > b[field][0]) return -1;
+            if (a[field][0] < b[field[0]]) return 1;
+            return 0;
+          });
+          setData(cloneData);
+          setSort({ key: field, sortDirection: null });
+        } else {
+          setData(local_Data);
+          setSort({ key: field, sortDirection: "asc" });
+        }
+
         break;
       }
       case "number": {
-        
-        
+        if (!(sort.key == field) || sort.sortDirection === "asc") {
+          cloneData.sort((a, b) => {
+            return a[field] - b[field];
+          });
 
-       if (!(sort.key == field) || sort.sortDirection === "asc") {
-        
-         cloneData.sort((a, b) => {
-           return a[field] - b[field];
-         });
-
-         setData(cloneData);
-         setSort({ key: field, sortDirection: "desc" });
-       } else if (sort.sortDirection === "desc") {
-        
-         cloneData.sort((a, b) => {
-           return b[field] - a[field];
-         });
-         setData(cloneData);
-         setSort({ key: field, sortDirection: null });
-       } else {
-      
-         setData(localData);
-         setSort({ key: field, sortDirection: "asc" });
-       }
+          setData(cloneData);
+          setSort({ key: field, sortDirection: "desc" });
+        } else if (sort.sortDirection === "desc") {
+          cloneData.sort((a, b) => {
+            return b[field] - a[field];
+          });
+          setData(cloneData);
+          setSort({ key: field, sortDirection: null });
+        } else {
+          setData(local_Data);
+          setSort({ key: field, sortDirection: "asc" });
+        }
         break;
       }
       case "date": {
@@ -87,7 +93,7 @@ export default function Tables({ localData, tableTitle }) {
           setData(cloneData);
           setSort({ key: field, sortDirection: null });
         } else {
-          setData(localData);
+          setData(local_Data);
           setSort({ key: field, sortDirection: "asc" });
         }
         break;
@@ -97,34 +103,27 @@ export default function Tables({ localData, tableTitle }) {
       }
     }
 
-   // setData(cloneData);
+    // setData(cloneData);
   };
 
   const handelSearch = (event) => {
-  
-    let tempdata   = [...localData]
-    
-   const newData = tempdata.filter((e)=>{
-        
-        let a =Object.entries(e);
-        a= a.map((ez) => ez[1]);
-        a.splice(8, 1);
-        a.splice(0, 1);
-        
-        
-        a = a.filter((ex) => {
-          return ex.toUpperCase().includes(event.target.value.toUpperCase());
-        });
-        console.log(a.length)
+    let tempdata = [...data];
 
+    const newData = tempdata.filter((e) => {
+      let a = Object.entries(e);
+      a = a.map((ez) => ez[1]);
+      a.splice(8, 1);
+      a.splice(0, 1);
 
+      a = a.filter((ex) => {
+        return ex.toUpperCase().includes(event.target.value.toUpperCase());
+      });
+      console.log(a.length);
 
-        return  a.length!==0 && e
-    })
+      return a.length !== 0 && e;
+    });
 
-    setData(newData)
-
-
+    setData(newData);
   };
 
   return (
@@ -199,6 +198,7 @@ export default function Tables({ localData, tableTitle }) {
           data.map((transection, index) => {
             return (
               <div className="row" key={index}>
+              
                 <div className="col">{transection.TransactionDate}</div>
                 <div className="col">{transection.MonthYear}</div>
                 <div className="col">{transection.TransactionType}</div>
@@ -234,6 +234,32 @@ export default function Tables({ localData, tableTitle }) {
             );
           })}
       </div>
+      <button onClick={() => handelClickOnPageNumbe(currentPageNo - 1)}>
+        {"<<<<"}
+      </button>
+      {Array(TOTAL_NUMBER_OF_PAGES)
+        .fill(0)
+        .map((_, index) => {
+          return (
+            <>
+              <button
+                style={{
+                  background: currentPageNo == index ? "#00FFCA" : "#A6D0DD",
+                  padding: "8px",
+                  margin: "8px",
+                  // border: 1px  currentPageNo == index ? "#A6D0DD" : "#00FFCA",
+                  border: `2px solid ${currentPageNo == index ? "#A6D0DD" : "#00FFCA"}`,
+                }}
+                onClick={() => handelClickOnPageNumbe(index)}
+              >
+                {index + 1}
+              </button>
+            </>
+          );
+        })}
+      <button onClick={() => handelClickOnPageNumbe(currentPageNo + 1)}>
+        {">>>>"}
+      </button>
     </>
   );
 }

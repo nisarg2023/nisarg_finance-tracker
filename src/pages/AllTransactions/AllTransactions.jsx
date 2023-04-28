@@ -101,17 +101,15 @@ export default function AllTransactions() {
           <option value="ToAccount">To Account</option>
         </select>
 
-       
-
         {localData && orderBy.length === 0 ? (
           <div>
-            <Tables localData={data.reverse()} tableTitle={tableTitle} />
+            <Tables local_Data={data} tableTitle={tableTitle} />
           </div>
         ) : (
           orderBy.map((value, index) => {
             return (
               <div key={index}>
-                <Tables localData={value} tableTitle={tableTitle} />
+                <Tables local_Data={value} tableTitle={tableTitle} />
 
                 <hr />
                 <hr />
