@@ -78,6 +78,7 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
 
   const [formValue, setFormValue] = useState(initialFormValues);
   const [formErr, setFormErr] = useState(initialFormErr);
+  const [removeImage, setRemoveImage] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -147,6 +148,12 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
 
     //================================================================
   };
+
+  const handelRemoveImage = () => {
+    setRemoveImage(true);
+    setFormValue({...formValue, Receipt:""});
+  };
+
   const handelOnSubmit = (e) => {
     e.preventDefault();
     console.table(formValue);
@@ -380,6 +387,45 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
                   }}
                 />
                 <span>{formErr.Receipt}</span>
+              </div>
+            </div>
+          )}
+
+          {isUpdate && (
+            <div className="input_div">
+              <div className="left_div">
+                <label htmlFor="Receipt : ">Receipt : </label>
+              </div>
+
+              <div className="right_div">
+                {removeImage ? (
+                  <>
+                    <input
+                      type="file"
+                      name="Receipt"
+                      value={formValue.Receipt}
+                      onChange={(e) => {
+                        setFormValue({ ...formValue, Receipt: e.target.value });
+                        handelFile(e.target.files);
+                      }}
+                    />
+                    <span>{formErr.Receipt}</span>
+                  </>
+                ) : (
+                  <>
+                    <img
+                      style={{ width: "200px" }}
+                      src={formValue.ReceiptBase64}
+                      alt="..."
+                    />
+
+                    <input
+                      type="button"
+                      value="remove"
+                      onClick={() => handelRemoveImage()}
+                    />
+                  </>
+                )}
               </div>
             </div>
           )}

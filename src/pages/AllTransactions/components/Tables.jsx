@@ -144,7 +144,7 @@ export default function Tables({ localData, tableTitle }) {
           <div
             className="col"
             onClick={() => {
-              hanelSort("MonthYear");
+              hanelSort("MonthYear", "date");
             }}
           >
             Month Year
@@ -192,6 +192,7 @@ export default function Tables({ localData, tableTitle }) {
           </div>
           <div className="col">Action</div>
           <div className="col">Update</div>
+          <div className="col">Delete </div>
         </div>
 
         {data.length !== 0 &&
@@ -224,6 +225,10 @@ export default function Tables({ localData, tableTitle }) {
 
                 <div className="col">
                   <Link to={`/update/${transection.id}`}>update</Link>
+                </div>
+
+                <div className="col">
+                  <Link>Delete</Link>
                 </div>
               </div>
             );
