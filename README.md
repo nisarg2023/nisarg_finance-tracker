@@ -1,4 +1,4 @@
-[
+const data = [
     {
         "id": 1,
         "TransactionDate": "2023-04-14",
