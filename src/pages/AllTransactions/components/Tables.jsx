@@ -52,7 +52,8 @@ export default function Tables({ local_Data, tableTitle }) {
           setData(cloneData);
           setSort({ key: field, sortDirection: null });
         } else {
-          setData(local_Data);
+          // setData(local_Data);
+         handelClickOnPageNumbe(currentPageNo);
           setSort({ key: field, sortDirection: "asc" });
         }
 
@@ -73,7 +74,8 @@ export default function Tables({ local_Data, tableTitle }) {
           setData(cloneData);
           setSort({ key: field, sortDirection: null });
         } else {
-          setData(local_Data);
+          // setData(local_Data);
+          handelClickOnPageNumbe(currentPageNo);
           setSort({ key: field, sortDirection: "asc" });
         }
         break;
@@ -93,7 +95,8 @@ export default function Tables({ local_Data, tableTitle }) {
           setData(cloneData);
           setSort({ key: field, sortDirection: null });
         } else {
-          setData(local_Data);
+          //setData(local_Data);
+          handelClickOnPageNumbe(currentPageNo);
           setSort({ key: field, sortDirection: "asc" });
         }
         break;
