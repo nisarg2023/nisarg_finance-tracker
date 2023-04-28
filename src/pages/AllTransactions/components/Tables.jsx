@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./style.css";
 
 export default function Tables({ local_Data, tableTitle }) {
-  const RECORD_PER_PAGE = 1;
+  const RECORD_PER_PAGE = 2;
   const TOTAL_NUMBER_OF_PAGES = Math.ceil(local_Data.length / RECORD_PER_PAGE);
   const [data, setData] = useState([]);
   const [currentPageNo, setCurrentPageNo] = useState(0);
@@ -108,7 +108,12 @@ export default function Tables({ local_Data, tableTitle }) {
 
   const handelSearch = (event) => {
     let tempdata = [...data];
-
+    if(event.target.value.trim()==="")
+    {
+        handelClickOnPageNumbe(currentPageNo)
+       
+    }
+    else{
     const newData = tempdata.filter((e) => {
       let a = Object.entries(e);
       a = a.map((ez) => ez[1]);
@@ -118,12 +123,12 @@ export default function Tables({ local_Data, tableTitle }) {
       a = a.filter((ex) => {
         return ex.toUpperCase().includes(event.target.value.toUpperCase());
       });
-      console.log(a.length);
+    
 
       return a.length !== 0 && e;
     });
-
     setData(newData);
+  }
   };
 
   return (

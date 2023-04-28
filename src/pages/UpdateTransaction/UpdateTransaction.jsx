@@ -10,7 +10,10 @@ export default function UpdateTransaction() {
     console.table(data[index]);
   return (
     <div>
-      <AddTransaction localFormValue={data[index]} index={index} isUpdate={true}/>
+      {
+        index<0 ?(<h1>no data found</h1>):(<AddTransaction localFormValue={data[index]} index={index} isUpdate={true}/>)
+      }
+      
     </div>
   );
 }
