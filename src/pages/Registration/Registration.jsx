@@ -18,7 +18,7 @@ export default function Registration() {
   useEffect(() => {
     const local_users = JSON.parse(localStorage.getItem("users"));
 
-    users ? setUsers(local_users) : setUsers([]);
+    local_users ? setUsers(local_users) : setUsers([]);
 
     const id = local_users
       ? JSON.parse(localStorage.getItem("users")).length + 1
@@ -48,8 +48,9 @@ export default function Registration() {
   };
 
   const isEmailAlreadyExists = (element) => {
+   
     const email = users.find(({ email }) => element.value.trim() === email);
-
+ console.log(email);
     if (email) {
       setUserErr((prev) => {
         return { ...prev, [element.name]: "this email already exists" };
@@ -75,6 +76,7 @@ export default function Registration() {
 
     if (isFormValid) {
       const cloneUsers = users;
+      console.log(user)
       cloneUsers.push(user);
       localStorage.setItem("users", JSON.stringify(cloneUsers));
       navigate("/login");

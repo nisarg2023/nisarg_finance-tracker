@@ -245,20 +245,23 @@ export default function Tables({ local_Data, tableTitle }) {
         .fill(0)
         .map((_, index) => {
           return (
-            <>
+            <div style={{display:"inline"}} key={index}>
               <button
+               
                 style={{
                   background: currentPageNo == index ? "#00FFCA" : "#A6D0DD",
                   padding: "8px",
                   margin: "8px",
                   // border: 1px  currentPageNo == index ? "#A6D0DD" : "#00FFCA",
-                  border: `2px solid ${currentPageNo == index ? "#A6D0DD" : "#00FFCA"}`,
+                  border: `2px solid ${
+                    currentPageNo == index ? "#A6D0DD" : "#00FFCA"
+                  }`,
                 }}
                 onClick={() => handelClickOnPageNumbe(index)}
               >
                 {index + 1}
               </button>
-            </>
+            </div>
           );
         })}
       <button onClick={() => handelClickOnPageNumbe(currentPageNo + 1)}>

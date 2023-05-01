@@ -93,7 +93,7 @@ export default function AllTransactions() {
             handelOrderBy(e);
           }}
         >
-          <option value="" disabled hidden selected>
+          <option value="" disabled hidden>
             select{" "}
           </option>
           <option value="none">none </option>

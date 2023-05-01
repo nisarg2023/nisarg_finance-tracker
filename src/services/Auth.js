@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import Login from '../pages/Login/Login';
 
 
 const Auth = ({children}) =>{
-    
-    const [isUserLogin,setIsuserLogin]=useState();
+    const navigate = useNavigate();
+    const [isUserLogin, setIsuserLogin] = useState(false);
     useEffect(()=>{
-       setIsuserLogin(localStorage.getItem('isUserLoggedIn'));
-
+        const data = JSON.parse(localStorage.getItem('isUserLoggedIn'))
+        if (data == null) {
+            navigate("/login");
+        }
+        else {
+            setIsuserLogin(true);
+        }
     },[])
 
 
     return( 
      <>
-         {
-            isUserLogin ?(children):(<Navigate to="/login"/>)
 
-         }
+
+            {isUserLogin ? (children) : <></>}
+
+
      </>)
 }
     
