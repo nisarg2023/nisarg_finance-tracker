@@ -1,5 +1,5 @@
 import React, {  useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ToAccount,
   FromAccount,
@@ -9,6 +9,8 @@ import {
 import Tables from "./components/Tables";
 
 export default function AllTransactions() {
+
+    const navigate = useNavigate();
   let localData = JSON.parse(localStorage.getItem("data"));
   
   const [data, setData] = useState(localData);
@@ -100,6 +102,13 @@ export default function AllTransactions() {
           <option value="FromAccount">From Account </option>
           <option value="ToAccount">To Account</option>
         </select>
+
+
+        <button onClick={()=>{localStorage.removeItem("isUserLoggedIn");
+        localStorage.removeItem("currentLoginuser");
+        navigate('/login')
+        
+      }}>Log Out</button>
 
         {localData && orderBy.length === 0 ? (
           <div>

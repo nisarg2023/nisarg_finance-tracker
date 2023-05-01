@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./style.css";
 
 export default function Tables({ local_Data, tableTitle }) {
-  const RECORD_PER_PAGE = 2;
+  const RECORD_PER_PAGE = 5;
   const TOTAL_NUMBER_OF_PAGES = Math.ceil(local_Data.length / RECORD_PER_PAGE);
   const [data, setData] = useState([]);
   const [currentPageNo, setCurrentPageNo] = useState(0);
@@ -13,7 +13,7 @@ export default function Tables({ local_Data, tableTitle }) {
     const tempData = local_Data;
     setData(tempData.slice(0, RECORD_PER_PAGE));
     // setData(local_Data);
-  }, []);
+  }, [local_Data]);
 
   const handelClickOnPageNumbe = (current) => {
     if (!(current < 0 || current > TOTAL_NUMBER_OF_PAGES - 1)) {
@@ -25,7 +25,6 @@ export default function Tables({ local_Data, tableTitle }) {
         )
       );
       setCurrentPageNo(current);
-      
     }
   };
 
@@ -53,7 +52,7 @@ export default function Tables({ local_Data, tableTitle }) {
           setSort({ key: field, sortDirection: null });
         } else {
           // setData(local_Data);
-         handelClickOnPageNumbe(currentPageNo);
+          handelClickOnPageNumbe(currentPageNo);
           setSort({ key: field, sortDirection: "asc" });
         }
 
@@ -111,27 +110,24 @@ export default function Tables({ local_Data, tableTitle }) {
 
   const handelSearch = (event) => {
     let tempdata = [...data];
-    if(event.target.value.trim()==="")
-    {
-        handelClickOnPageNumbe(currentPageNo)
-       
-    }
-    else{
-    const newData = tempdata.filter((e) => {
-      let a = Object.entries(e);
-      a = a.map((ez) => ez[1]);
-      a.splice(8, 1);
-      a.splice(0, 1);
+    if (event.target.value.trim() === "") {
+      handelClickOnPageNumbe(currentPageNo);
+      
+    } else {
+      const newData = tempdata.filter((e) => {
+        let a = Object.entries(e);
+        a = a.map((ez) => ez[1]);
+        a.splice(8, 1);
+        a.splice(0, 1);
 
-      a = a.filter((ex) => {
-        return ex.toUpperCase().includes(event.target.value.toUpperCase());
+        a = a.filter((ex) => {
+          return ex.toUpperCase().includes(event.target.value.toUpperCase());
+        });
+
+        return a.length !== 0 && e;
       });
-    
-
-      return a.length !== 0 && e;
-    });
-    setData(newData);
-  }
+      setData(newData);
+    }
   };
 
   return (

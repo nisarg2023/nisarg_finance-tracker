@@ -5,6 +5,8 @@ import AddTransaction from './pages/AddTransaction/AddTransaction';
 import AllTransactions from './pages/AllTransactions/AllTransactions';
 import ViewTransaction from './pages/ViewTransaction/ViewTransaction';
 import UpdateTransaction from './pages/UpdateTransaction/UpdateTransaction';
+import Registration from './pages/Registration/Registration';
+import Login from './pages/Login/Login';
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
           <Route path="/alltransactions" element={<AllTransactions/>}/>
           <Route path="/view/:id" element={<ViewTransaction/>} />
           <Route path="/update/:id" element={<UpdateTransaction />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/login" element={<Login />} />
 
         </Routes>
       </BrowserRouter>
