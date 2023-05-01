@@ -83,11 +83,17 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
 
   useEffect(() => {
     if (!isUpdate) {
-      const id = localStorage.getItem("data")
-        ? JSON.parse(localStorage.getItem("data")).length + 1
-        : 1;
+      
+      // const id = localStorage.getItem("data")
+      //   ? JSON.parse(localStorage.getItem("data")).length + 1
+      //   : 1;
+      let id;
+        if (localStorage.getItem("data")) 
+        {
+          let data = JSON.parse(localStorage.getItem("data"));
+          id = data[data.length -1].id + 1;
 
-      console.log(id);
+        }else{id=1}
 
       setFormValue((prev) => {
         return { ...prev, id: id };
@@ -214,7 +220,7 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
 
       // alert("Transaction is added successfully");
 
-      navigate("/alltransactions");
+      navigate("/");
     } else {
       alert("some things went wrong");
     }
@@ -456,7 +462,7 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
         </div>
       </form>
 
-      <Link to="/alltransactions">All Transaction </Link>
+      <Link to="/">All Transaction </Link>
     </div>
   );
 }

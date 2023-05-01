@@ -16,6 +16,8 @@ export default function Login() {
   });
 
   useEffect(() => {
+    const isUserLoggedIn = JSON.parse(localStorage.getItem("isUserLoggedIn"));
+    isUserLoggedIn ? navigate("/") : <></>;
     const local_users = JSON.parse(localStorage.getItem("users"));
     users ? setUsers(local_users) : setUsers([]);
   }, []);
@@ -53,7 +55,7 @@ export default function Login() {
       if (userData && userData.password === password.value) {
         localStorage.setItem("isUserLoggedIn", true);
         localStorage.setItem("currentLoginuser", JSON.stringify(userData));
-        navigate("/alltransactions");
+        navigate("/");
       } else {
         setIsauthenticat(false);
       }

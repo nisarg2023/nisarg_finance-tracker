@@ -130,6 +130,21 @@ export default function Tables({ local_Data, tableTitle }) {
     }
   };
 
+  const deleteTransection = (id) => {
+    const cloneLocalData = [...data];
+    const index = cloneLocalData.findIndex((e) => e.id === id);
+    cloneLocalData.splice(index, 1);
+    setData(cloneLocalData);
+
+    const cloneLocalStorageData = JSON.parse(localStorage.getItem("data"));
+    const localStorageindex = cloneLocalStorageData.findIndex(
+      (e) => e.id === id
+    );
+    cloneLocalStorageData.splice(localStorageindex, 1);
+    localStorage.setItem("data", JSON.stringify(cloneLocalStorageData));
+  };
+
+
   return (
     <>
       <h3>{data.length !== 0 && data[0][tableTitle]}</h3>{" "}
@@ -202,7 +217,6 @@ export default function Tables({ local_Data, tableTitle }) {
           data.map((transection, index) => {
             return (
               <div className="row" key={index}>
-              
                 <div className="col">{transection.TransactionDate}</div>
                 <div className="col">{transection.MonthYear}</div>
                 <div className="col">{transection.TransactionType}</div>
@@ -232,7 +246,9 @@ export default function Tables({ local_Data, tableTitle }) {
                 </div>
 
                 <div className="col">
-                  <Link>Delete</Link>
+                  <button onClick={() => deleteTransection(transection.id)}>
+                    Delete
+                  </button>
                 </div>
               </div>
             );

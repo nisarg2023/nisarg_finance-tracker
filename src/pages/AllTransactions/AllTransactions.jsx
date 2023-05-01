@@ -84,7 +84,7 @@ export default function AllTransactions() {
   return (
     <>
       <div>
-        <Link to="/">Add new Transection</Link>
+        <Link to="/addtransaction">Add new Transection</Link>
 
         <select
           name="orderBy"
@@ -103,12 +103,15 @@ export default function AllTransactions() {
           <option value="ToAccount">To Account</option>
         </select>
 
-
-        <button onClick={()=>{localStorage.removeItem("isUserLoggedIn");
-        localStorage.removeItem("currentLoginuser");
-        navigate('/login')
-        
-      }}>Log Out</button>
+        <button
+          onClick={() => {
+            localStorage.removeItem("isUserLoggedIn");
+            localStorage.removeItem("currentLoginuser");
+            navigate("/login");
+          }}
+        >
+          Log Out
+        </button>
 
         {localData && orderBy.length === 0 ? (
           <div>
