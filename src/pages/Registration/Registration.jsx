@@ -16,8 +16,10 @@ export default function Registration() {
   });
 
   useEffect(() => {
-    const local_users = JSON.parse(localStorage.getItem("users"));
+    const isUserLoggedIn = JSON.parse(localStorage.getItem("isUserLoggedIn"));
+    isUserLoggedIn ? navigate("/") : <></>;
 
+    const local_users = JSON.parse(localStorage.getItem("users"));
     local_users ? setUsers(local_users) : setUsers([]);
 
     const id = local_users

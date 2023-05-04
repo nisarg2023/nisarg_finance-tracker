@@ -27,7 +27,7 @@ span{
 }
 .col{
   display: table-cell;
-  /* border: 1px solid #dddddd; */
+    /* border: 1px solid #dddddd; */
   padding: 8px;
   line-height: 1.42857143;
   vertical-align: top;
