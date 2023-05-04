@@ -50,7 +50,8 @@ export default function Login() {
     isValid = !isEmapty(password) && isValid;
 
     if (isValid) {
-      const userData = users.find((user) => user.email === email.value);
+      console.log(users);
+      const userData = users && users.find((user) => user.email === email.value);
 
       if (userData && userData.password === password.value) {
         localStorage.setItem("isUserLoggedIn", true);

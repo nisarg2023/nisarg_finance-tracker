@@ -207,14 +207,14 @@ export default function Tables({ local_Data, tableTitle }) {
             Amount
           </div>
           <div className="col th ">Receipt</div>
-          <di v
+          <div
             className="col th"
             onClick={() => {
               hanelSort("Notes");
             }}
           >
             Notes
-          </di>
+          </div>
           <div className="col th">Action</div>
           <div className="col th">Update</div>
           <div className="col th">Delete </div>

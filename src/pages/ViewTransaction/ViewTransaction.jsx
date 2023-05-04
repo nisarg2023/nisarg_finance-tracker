@@ -4,10 +4,11 @@ import './style.css'
 
 export default function ViewTransaction() {
     const {id} = useParams()
-    const data = JSON.parse(localStorage.getItem("data"))
-    const [transection] = data.filter(ele => ele.id==id)
+    const data = JSON.parse(localStorage.getItem("data"));
+    const [transection] =  data ? data.filter(ele => ele.id==id):[];
+    
    
-    console.table(transection)
+    
 
   return (
     <>

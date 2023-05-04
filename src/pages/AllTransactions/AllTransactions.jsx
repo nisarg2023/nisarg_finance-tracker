@@ -26,8 +26,8 @@ export default function AllTransactions() {
     switch (e.target.value) {
       case "MonthYear": {
         MonthYear.map((transection) => {
-          return a.push(
-            data.filter((val) => {
+          return data && a.push(
+             data.filter((val) => {
               return val[e.target.value] === transection;
             })
           );
@@ -37,10 +37,13 @@ export default function AllTransactions() {
       }
       case "TransactionType": {
         TransactionType.map((transection) => {
-          return a.push(
-            data.filter((val) => {
-              return val[e.target.value] === transection;
-            })
+          return (
+            data &&
+            a.push(
+              data.filter((val) => {
+                return val[e.target.value] === transection;
+              })
+            )
           );
         });
 
@@ -49,10 +52,13 @@ export default function AllTransactions() {
 
       case "ToAccount": {
         ToAccount.map((transection) => {
-          return a.push(
-            data.filter((val) => {
-              return val[e.target.value] === transection;
-            })
+          return (
+            data &&
+            a.push(
+              data.filter((val) => {
+                return val[e.target.value] === transection;
+              })
+            )
           );
         });
 
@@ -61,10 +67,13 @@ export default function AllTransactions() {
 
       case "FromAccount": {
         FromAccount.map((transection) => {
-          return a.push(
-            data.filter((val) => {
-              return val[e.target.value] === transection;
-            })
+          return (
+            data &&
+            a.push(
+              data.filter((val) => {
+                return val[e.target.value] === transection;
+              })
+            )
           );
         });
 
