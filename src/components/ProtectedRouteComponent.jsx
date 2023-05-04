@@ -9,10 +9,10 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 function ProtectedRouteComponent(props) {
   const navigate = useNavigate();
+  console.log(props)
 
   useEffect(() => {
     if (!props.isUserLogin) {
-      console.log("enter ");
       navigate("/login");
     }
   }, []);
@@ -29,5 +29,8 @@ function ProtectedRouteComponent(props) {
       )}
     </>
   );
+
+
+  
 }
 export default withAuth(ProtectedRouteComponent);

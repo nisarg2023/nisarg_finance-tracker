@@ -131,6 +131,8 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
             "receipt upload size should not exceed 1 MB, allow only .png .jpg .jpeg ",
         };
       });
+
+    
     } else {
       setFormErr((prev) => {
         return { ...prev, Receipt: "" };
@@ -386,8 +388,7 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
                 <input
                   type="file"
                   name="Receipt"
-                  value={formValue.Receipt}
-                  onChange={(e) => {
+                   onChange={(e) => {
                     setFormValue({ ...formValue, Receipt: e.target.value });
                     handelFile(e.target.files);
                   }}

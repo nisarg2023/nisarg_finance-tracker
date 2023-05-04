@@ -6,13 +6,14 @@ export default function Tables({ local_Data, tableTitle }) {
   const RECORD_PER_PAGE = 5;
   const TOTAL_NUMBER_OF_PAGES = Math.ceil(local_Data.length / RECORD_PER_PAGE);
   const [data, setData] = useState([]);
+  const [currentPageData, setCurrentPageData] = useState([]);
   const [currentPageNo, setCurrentPageNo] = useState(0);
   const [sort, setSort] = useState({ key: null, sortDirection: "asc" });
 
   useEffect(() => {
     const tempData = local_Data;
     setData(tempData.slice(0, RECORD_PER_PAGE));
-    // setData(local_Data);
+     setCurrentPageData(tempData.slice(0, RECORD_PER_PAGE));
   }, [local_Data]);
 
   const handelClickOnPageNumbe = (current) => {
@@ -24,12 +25,18 @@ export default function Tables({ local_Data, tableTitle }) {
           RECORD_PER_PAGE * current + RECORD_PER_PAGE
         )
       );
+      setCurrentPageData(
+        tempData.slice(
+          RECORD_PER_PAGE * current,
+          RECORD_PER_PAGE * current + RECORD_PER_PAGE
+        )
+      );
       setCurrentPageNo(current);
     }
   };
 
   const hanelSort = (field, type = "string") => {
-    const cloneData = [...data];
+    const cloneData = [...currentPageData];
 
     switch (type) {
       case "string": {
@@ -51,8 +58,8 @@ export default function Tables({ local_Data, tableTitle }) {
           setData(cloneData);
           setSort({ key: field, sortDirection: null });
         } else {
-          // setData(local_Data);
-          handelClickOnPageNumbe(currentPageNo);
+          setData(currentPageData);
+
           setSort({ key: field, sortDirection: "asc" });
         }
 
@@ -74,7 +81,8 @@ export default function Tables({ local_Data, tableTitle }) {
           setSort({ key: field, sortDirection: null });
         } else {
           // setData(local_Data);
-          handelClickOnPageNumbe(currentPageNo);
+          //handelClickOnPageNumbe(currentPageNo);
+          setData(currentPageData);
           setSort({ key: field, sortDirection: "asc" });
         }
         break;
@@ -95,7 +103,8 @@ export default function Tables({ local_Data, tableTitle }) {
           setSort({ key: field, sortDirection: null });
         } else {
           //setData(local_Data);
-          handelClickOnPageNumbe(currentPageNo);
+          // handelClickOnPageNumbe(currentPageNo);
+          setData(currentPageData);
           setSort({ key: field, sortDirection: "asc" });
         }
         break;
@@ -109,11 +118,9 @@ export default function Tables({ local_Data, tableTitle }) {
   };
 
   const handelSearch = (event) => {
-    let tempdata = [...data];
-    if (event.target.value.trim() === "") {
-      handelClickOnPageNumbe(currentPageNo);
-      
-    } else {
+
+    let tempdata = [...currentPageData];
+    
       const newData = tempdata.filter((e) => {
         let a = Object.entries(e);
         a = a.map((ez) => ez[1]);
@@ -127,7 +134,7 @@ export default function Tables({ local_Data, tableTitle }) {
         return a.length !== 0 && e;
       });
       setData(newData);
-    }
+    
   };
 
   const deleteTransection = (id) => {
@@ -152,15 +159,15 @@ export default function Tables({ local_Data, tableTitle }) {
       <div className="table">
         <div className="row">
           <div
-            className="col"
+            className="col th"
             onClick={() => {
               hanelSort("TransactionDate", "date");
             }}
           >
-            Transaction Date{" "}
+            Transaction Date
           </div>
           <div
-            className="col"
+            className="col th"
             onClick={() => {
               hanelSort("MonthYear", "date");
             }}
@@ -168,7 +175,7 @@ export default function Tables({ local_Data, tableTitle }) {
             Month Year
           </div>
           <div
-            className="col"
+            className="col th"
             onClick={() => {
               hanelSort("TransactionType");
             }}
@@ -176,7 +183,7 @@ export default function Tables({ local_Data, tableTitle }) {
             Transaction Type
           </div>
           <div
-            className="col"
+            className="col th"
             onClick={() => {
               hanelSort("FromAccount");
             }}
@@ -184,7 +191,7 @@ export default function Tables({ local_Data, tableTitle }) {
             From Account
           </div>
           <div
-            className="col"
+            className="col th"
             onClick={() => {
               hanelSort("ToAccount");
             }}
@@ -192,43 +199,53 @@ export default function Tables({ local_Data, tableTitle }) {
             To Account
           </div>
           <div
-            className="col"
+            className="col th"
             onClick={() => {
               hanelSort("Amount", "number");
             }}
           >
             Amount
           </div>
-          <div className="col">Receipt</div>
-          <div
-            className="col"
+          <div className="col th ">Receipt</div>
+          <di v
+            className="col th"
             onClick={() => {
               hanelSort("Notes");
             }}
           >
             Notes
-          </div>
-          <div className="col">Action</div>
-          <div className="col">Update</div>
-          <div className="col">Delete </div>
+          </di>
+          <div className="col th">Action</div>
+          <div className="col th">Update</div>
+          <div className="col th">Delete </div>
         </div>
 
         {data.length !== 0 &&
           data.map((transection, index) => {
             return (
               <div className="row" key={index}>
-                <div className="col">{transection.TransactionDate}</div>
-                <div className="col">{transection.MonthYear}</div>
-                <div className="col">{transection.TransactionType}</div>
-                <div className="col">{transection.FromAccount}</div>
-                <div className="col">{transection.ToAccount} </div>
-                <div className="col">
+                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
+                  {transection.TransactionDate}
+                </div>
+                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
+                  {transection.MonthYear}
+                </div>
+                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
+                  {transection.TransactionType}
+                </div>
+                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
+                  {transection.FromAccount}
+                </div>
+                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
+                  {transection.ToAccount}{" "}
+                </div>
+                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
                   {Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency: "INR",
                   }).format(transection.Amount)}
                 </div>
-                <div className="col">
+                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
                   {" "}
                   <img
                     src={transection.ReceiptBase64}
@@ -236,16 +253,18 @@ export default function Tables({ local_Data, tableTitle }) {
                     alt=""
                   />{" "}
                 </div>
-                <div className="col">{transection.Notes}</div>
-                <div className="col">
+                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
+                  {transection.Notes}
+                </div>
+                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
                   <Link to={`/view/${transection.id}`}>view</Link>
                 </div>
 
-                <div className="col">
+                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
                   <Link to={`/update/${transection.id}`}>update</Link>
                 </div>
 
-                <div className="col">
+                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
                   <button onClick={() => deleteTransection(transection.id)}>
                     Delete
                   </button>
@@ -261,9 +280,8 @@ export default function Tables({ local_Data, tableTitle }) {
         .fill(0)
         .map((_, index) => {
           return (
-            <div style={{display:"inline"}} key={index}>
+            <div style={{ display: "inline" }} key={index}>
               <button
-               
                 style={{
                   background: currentPageNo == index ? "#00FFCA" : "#A6D0DD",
                   padding: "8px",
