@@ -11,6 +11,7 @@ import Tables from "./components/Tables";
 export default function AllTransactions() {
 
     const navigate = useNavigate();
+    
   let localData = JSON.parse(localStorage.getItem("data"));
   
   const [data, setData] = useState(localData);

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./style.css";
 
 export default function Tables({ local_Data, tableTitle }) {
-  const RECORD_PER_PAGE = 5;
+  const RECORD_PER_PAGE = 2;
   const TOTAL_NUMBER_OF_PAGES = Math.ceil(local_Data.length / RECORD_PER_PAGE);
   const [data, setData] = useState([]);
   const [currentPageData, setCurrentPageData] = useState([]);

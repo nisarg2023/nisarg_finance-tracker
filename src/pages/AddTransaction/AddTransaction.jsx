@@ -131,8 +131,6 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
             "receipt upload size should not exceed 1 MB, allow only .png .jpg .jpeg ",
         };
       });
-
-    
     } else {
       setFormErr((prev) => {
         return { ...prev, Receipt: "" };
@@ -146,7 +144,7 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
 
     reader.onload = function () {
       let base64String = reader.result;
-
+      console.log(base64String);
       setFormValue((prev) => {
         return { ...prev, ReceiptBase64: base64String };
       });
@@ -159,7 +157,8 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
 
   const handelRemoveImage = () => {
     setRemoveImage(true);
-    setFormValue({...formValue, Receipt:""});
+    setFormValue({ ...formValue, Receipt: "" });
+    setFormErr({ ...formErr, Receipt: "*" });
   };
 
   const handelOnSubmit = (e) => {
