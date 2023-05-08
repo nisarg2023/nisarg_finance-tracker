@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export const MonthYear = [
@@ -79,21 +79,22 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
   const [formValue, setFormValue] = useState(initialFormValues);
   const [formErr, setFormErr] = useState(initialFormErr);
   const [removeImage, setRemoveImage] = useState(false);
+  const FromAccountRef = useRef();
+  const ToAccountRef = useRef();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isUpdate) {
-      
       // const id = localStorage.getItem("data")
       //   ? JSON.parse(localStorage.getItem("data")).length + 1
       //   : 1;
       let id;
-        if (localStorage.getItem("data")) 
-        {
-          let data = JSON.parse(localStorage.getItem("data"));
-          id = data[data.length -1].id + 1;
-
-        }else{id=1}
+      if (localStorage.getItem("data")) {
+        let data = JSON.parse(localStorage.getItem("data"));
+        id = data[data.length - 1].id + 1;
+      } else {
+        id = 1;
+      }
 
       setFormValue((prev) => {
         return { ...prev, id: id };
@@ -112,6 +113,77 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
         return { ...prev, [input.name]: "" };
       });
       return false;
+    }
+  };
+
+  const handelOnChange = (input, type) => {
+    isEmpty(input);
+
+    switch (type) {
+      case "Amount": {
+        if (input.value <= 0 && !isEmpty(input)) {
+          setFormErr((prev) => {
+            return {
+              ...prev,
+              Amount: "The amount should be greater than zero",
+            };
+          });
+        } else if (!isEmpty(input)) {
+          setFormErr((prev) => {
+            return {
+              ...prev,
+              Amount: "",
+            };
+          });
+        }
+        break;
+      }
+      case "Notes":
+        {
+
+          if (input.value.length > 250 && !isEmpty(input)) {
+            setFormErr((prev) => {
+              return {
+                ...prev,
+                Notes: "notes should not cross 250 characters in length",
+              };
+            });
+           
+          }
+          else if (!isEmpty(input)) {
+            setFormErr((prev) => {
+              return {
+                ...prev,
+                Notes: "",
+              };
+            });
+          }
+          break;
+        }
+
+      case "FromOrToAccount": {
+       
+        if (ToAccountRef.current.value === FromAccountRef.current.value) {
+          setFormErr((prev) => {
+            return {
+              ...prev,
+              ToAccount: "From and To Account must be different",
+            };
+          });
+        } else {
+          setFormErr((prev) => {
+            return {
+              ...prev,
+              ToAccount: "",
+            };
+          });
+        }
+
+        break;
+      }
+      default: {
+        break;
+      }
     }
   };
 
@@ -175,36 +247,7 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
       isFormValid = x[1] === "" && isFormValid;
     });
 
-    if (isFormValid) {
-      if (formValue.FromAccount === formValue.ToAccount) {
-        setFormErr((prev) => {
-          return {
-            ...prev,
-            ToAccount:
-              "value of from account and to account is must be diffrent",
-          };
-        });
-        isFormValid = false;
-      }
-
-      if (formValue.Amount <= 0) {
-        setFormErr((prev) => {
-          return { ...prev, Amount: "The amount should be greater than zero" };
-        });
-        isFormValid = false;
-      }
-
-      if (formValue.Notes.length > 250) {
-        setFormErr((prev) => {
-          return {
-            ...prev,
-            Notes: "notes should not cross 250 characters in length",
-          };
-        });
-        isFormValid = false;
-      }
-    }
-
+  
     if (isFormValid) {
       let localData = JSON.parse(localStorage.getItem("data"));
       if (localData) {
@@ -219,7 +262,7 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
         localStorage.setItem("data", JSON.stringify([formValue]));
       }
 
-      // alert("Transaction is added successfully");
+  
 
       navigate("/");
     } else {
@@ -249,7 +292,7 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
                     ...formValue,
                     TransactionDate: e.target.value,
                   });
-                  isEmpty(e.target);
+                  handelOnChange(e.target);
                 }}
               />
               <span>{formErr.TransactionDate}</span>
@@ -266,7 +309,7 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
                 value={formValue.MonthYear}
                 onChange={(e) => {
                   setFormValue({ ...formValue, MonthYear: e.target.value });
-                  isEmpty(e.target);
+                  handelOnChange(e.target);
                 }}
               >
                 <option value="" desable selectde hidden>
@@ -294,7 +337,7 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
                     ...formValue,
                     TransactionType: e.target.value,
                   });
-                  isEmpty(e.target);
+                  handelOnChange(e.target);
                 }}
               >
                 <option value="" desable selectde hidden>
@@ -315,11 +358,12 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
 
             <div className="right_div">
               <select
+                ref={FromAccountRef}
                 name="FromAccount"
                 value={formValue.FromAccount}
                 onChange={(e) => {
                   setFormValue({ ...formValue, FromAccount: e.target.value });
-                  isEmpty(e.target);
+                  handelOnChange(e.target, "FromOrToAccount");
                 }}
               >
                 <option value="" desable selectde hidden>
@@ -340,11 +384,12 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
 
             <div className="right_div">
               <select
+                ref={ToAccountRef}
                 name="ToAccount"
                 value={formValue.ToAccount}
                 onChange={(e) => {
                   setFormValue({ ...formValue, ToAccount: e.target.value });
-                  isEmpty(e.target);
+                  handelOnChange(e.target, "FromOrToAccount");
                 }}
               >
                 <option value="" desable selectde hidden>
@@ -370,71 +415,80 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
                 value={formValue.Amount}
                 onChange={(e) => {
                   setFormValue({ ...formValue, Amount: e.target.value });
-                  isEmpty(e.target);
+                  handelOnChange(e.target, "Amount");
                 }}
               />
               <span>{formErr.Amount}</span>
             </div>
-          </div>
+          </div>  
 
-          {!isUpdate && (
-            <div className="input_div">
-              <div className="left_div">
-                <label htmlFor="Receipt : ">Receipt : </label>
+          {
+            !isUpdate && 
+              <div className="input_div">
+                <div className="left_div">
+                  <label htmlFor="Receipt : ">Receipt : </label>
+                </div>
+
+                <div className="right_div">
+                  <input
+                    type="file"
+                    name="Receipt"
+                    onChange={(e) => {
+                      setFormValue({ ...formValue, Receipt: e.target.value });
+                      handelFile(e.target.files);
+                      handelOnChange(e.target);
+                    }}
+                  />
+                  <span>{formErr.Receipt}</span>
+                </div>
               </div>
+            
+          }
 
-              <div className="right_div">
-                <input
-                  type="file"
-                  name="Receipt"
-                   onChange={(e) => {
-                    setFormValue({ ...formValue, Receipt: e.target.value });
-                    handelFile(e.target.files);
-                  }}
-                />
-                <span>{formErr.Receipt}</span>
+          {
+            isUpdate && 
+              <div className="input_div">
+                <div className="left_div">
+                  <label htmlFor="Receipt : ">Receipt : </label>
+                </div>
+
+                <div className="right_div">
+                  {removeImage ? (
+                    <>
+                      <input
+                        type="file"
+                        name="Receipt"
+                        value={formValue.Receipt}
+                        onChange={(e) => {
+                          setFormValue({
+                            ...formValue,
+                            Receipt: e.target.value,
+                          });
+                          handelFile(e.target.files);
+                          handelOnChange(e.target);
+                        }}
+                      />
+                      <span>{formErr.Receipt}</span>
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        style={{ width: "200px" }}
+                        src={formValue.ReceiptBase64}
+                        alt="..."
+                      />
+
+                      <input
+                        type="button"
+                        value="remove"
+                        onClick={() => handelRemoveImage()}
+                      />
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-
-          {isUpdate && (
-            <div className="input_div">
-              <div className="left_div">
-                <label htmlFor="Receipt : ">Receipt : </label>
-              </div>
-
-              <div className="right_div">
-                {removeImage ? (
-                  <>
-                    <input
-                      type="file"
-                      name="Receipt"
-                      value={formValue.Receipt}
-                      onChange={(e) => {
-                        setFormValue({ ...formValue, Receipt: e.target.value });
-                        handelFile(e.target.files);
-                      }}
-                    />
-                    <span>{formErr.Receipt}</span>
-                  </>
-                ) : (
-                  <>
-                    <img
-                      style={{ width: "200px" }}
-                      src={formValue.ReceiptBase64}
-                      alt="..."
-                    />
-
-                    <input
-                      type="button"
-                      value="remove"
-                      onClick={() => handelRemoveImage()}
-                    />
-                  </>
-                )}
-              </div>
-            </div>
-          )}
+          
+          }
 
           <div className="input_div">
             <div className="left_div">
@@ -449,7 +503,7 @@ export default function AddTransaction({ localFormValue, index, isUpdate }) {
                 value={formValue.Notes}
                 onChange={(e) => {
                   setFormValue({ ...formValue, Notes: e.target.value });
-                  isEmpty(e.target);
+                  handelOnChange(e.target, "Notes");
                 }}
               ></textarea>
               <span>{formErr.Notes}</span>
