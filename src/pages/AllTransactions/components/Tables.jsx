@@ -3,40 +3,41 @@ import { Link } from "react-router-dom";
 import "./style.css";
 
 export default function Tables({ local_Data, tableTitle }) {
-  const RECORD_PER_PAGE = 2;
+  const RECORD_PER_PAGE = 5;
   const TOTAL_NUMBER_OF_PAGES = Math.ceil(local_Data.length / RECORD_PER_PAGE);
   const [data, setData] = useState([]);
-  const [currentPageData, setCurrentPageData] = useState([]);
+  // const [currentPageData, setCurrentPageData] = useState([]);
   const [currentPageNo, setCurrentPageNo] = useState(0);
   const [sort, setSort] = useState({ key: null, sortDirection: "asc" });
 
   useEffect(() => {
     const tempData = local_Data;
-    setData(tempData.slice(0, RECORD_PER_PAGE));
-     setCurrentPageData(tempData.slice(0, RECORD_PER_PAGE));
+    // setData(tempData.slice(0, RECORD_PER_PAGE));
+    setData(tempData);
   }, [local_Data]);
 
   const handelClickOnPageNumbe = (current) => {
     if (!(current < 0 || current > TOTAL_NUMBER_OF_PAGES - 1)) {
-      const tempData = local_Data;
-      setData(
-        tempData.slice(
-          RECORD_PER_PAGE * current,
-          RECORD_PER_PAGE * current + RECORD_PER_PAGE
-        )
-      );
-      setCurrentPageData(
-        tempData.slice(
-          RECORD_PER_PAGE * current,
-          RECORD_PER_PAGE * current + RECORD_PER_PAGE
-        )
-      );
+      // const tempData = local_Data;
+      // setData(
+      //   tempData.slice(
+      //     RECORD_PER_PAGE * current,
+      //     RECORD_PER_PAGE * current + RECORD_PER_PAGE
+      //   )
+      // );
+      // setCurrentPageData(
+      //   tempData.slice(
+      //     RECORD_PER_PAGE * current,
+      //     RECORD_PER_PAGE * current + RECORD_PER_PAGE
+      //   )
+      // );
       setCurrentPageNo(current);
     }
+    
   };
 
   const hanelSort = (field, type = "string") => {
-    const cloneData = [...currentPageData];
+    const cloneData = [...data];
 
     switch (type) {
       case "string": {
@@ -58,7 +59,8 @@ export default function Tables({ local_Data, tableTitle }) {
           setData(cloneData);
           setSort({ key: field, sortDirection: null });
         } else {
-          setData(currentPageData);
+          // setData(currentPageData);
+          setData(cloneData);
 
           setSort({ key: field, sortDirection: "asc" });
         }
@@ -82,7 +84,8 @@ export default function Tables({ local_Data, tableTitle }) {
         } else {
           // setData(local_Data);
           //handelClickOnPageNumbe(currentPageNo);
-          setData(currentPageData);
+          // setData(currentPageData);
+          setData(cloneData);
           setSort({ key: field, sortDirection: "asc" });
         }
         break;
@@ -104,7 +107,8 @@ export default function Tables({ local_Data, tableTitle }) {
         } else {
           //setData(local_Data);
           // handelClickOnPageNumbe(currentPageNo);
-          setData(currentPageData);
+          // setData(currentPageData);
+          setData(cloneData);
           setSort({ key: field, sortDirection: "asc" });
         }
         break;
@@ -118,23 +122,21 @@ export default function Tables({ local_Data, tableTitle }) {
   };
 
   const handelSearch = (event) => {
+    let tempdata = [...local_Data];
+    setCurrentPageNo(0);
+    const newData = tempdata.filter((e) => {
+      let a = Object.entries(e);
+      a = a.map((ez) => ez[1]);
+      a.splice(8, 1);
+      a.splice(0, 1);
 
-    let tempdata = [...currentPageData];
-    
-      const newData = tempdata.filter((e) => {
-        let a = Object.entries(e);
-        a = a.map((ez) => ez[1]);
-        a.splice(8, 1);
-        a.splice(0, 1);
-
-        a = a.filter((ex) => {
-          return ex.toUpperCase().includes(event.target.value.toUpperCase());
-        });
-
-        return a.length !== 0 && e;
+      a = a.filter((ex) => {
+        return ex.toUpperCase().includes(event.target.value.toUpperCase());
       });
-      setData(newData);
-    
+
+      return a.length !== 0 && e;
+    });
+    setData(newData);
   };
 
   const deleteTransection = (id) => {
@@ -150,7 +152,6 @@ export default function Tables({ local_Data, tableTitle }) {
     cloneLocalStorageData.splice(localStorageindex, 1);
     localStorage.setItem("data", JSON.stringify(cloneLocalStorageData));
   };
-
 
   return (
     <>
@@ -221,62 +222,89 @@ export default function Tables({ local_Data, tableTitle }) {
         </div>
 
         {data.length !== 0 &&
-          data.map((transection, index) => {
-            return (
-              <div className="row" key={index}>
-                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
-                  {transection.TransactionDate}
-                </div>
-                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
-                  {transection.MonthYear}
-                </div>
-                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
-                  {transection.TransactionType}
-                </div>
-                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
-                  {transection.FromAccount}
-                </div>
-                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
-                  {transection.ToAccount}{" "}
-                </div>
-                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
-                  {Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "INR",
-                  }).format(transection.Amount)}
-                </div>
-                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
-                  {" "}
-                  <img
-                    src={transection.ReceiptBase64}
-                    style={{ width: "80px" }}
-                    alt=""
-                  />{" "}
-                </div>
-                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
-                  {transection.Notes}
-                </div>
-                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
-                  <Link to={`/view/${transection.id}`}>view</Link>
-                </div>
+          data
+            .slice(
+              RECORD_PER_PAGE * currentPageNo,
+              RECORD_PER_PAGE * currentPageNo + RECORD_PER_PAGE
+            )
+            .map((transection, index) => {
+              return (
+                <div className="row" key={index}>
+                  <div
+                    className={index % 2 == 0 ? "col td_odd" : "col td_even"}
+                  >
+                    {transection.TransactionDate}
+                  </div>
+                  <div
+                    className={index % 2 == 0 ? "col td_odd" : "col td_even"}
+                  >
+                    {transection.MonthYear}
+                  </div>
+                  <div
+                    className={index % 2 == 0 ? "col td_odd" : "col td_even"}
+                  >
+                    {transection.TransactionType}
+                  </div>
+                  <div
+                    className={index % 2 == 0 ? "col td_odd" : "col td_even"}
+                  >
+                    {transection.FromAccount}
+                  </div>
+                  <div
+                    className={index % 2 == 0 ? "col td_odd" : "col td_even"}
+                  >
+                    {transection.ToAccount}{" "}
+                  </div>
+                  <div
+                    className={index % 2 == 0 ? "col td_odd" : "col td_even"}
+                  >
+                    {Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "INR",
+                    }).format(transection.Amount)}
+                  </div>
+                  <div
+                    className={index % 2 == 0 ? "col td_odd" : "col td_even"}
+                  >
+                    {" "}
+                    <img
+                      src={transection.ReceiptBase64}
+                      style={{ width: "80px" }}
+                      alt=""
+                    />{" "}
+                  </div>
+                  <div
+                    className={index % 2 == 0 ? "col td_odd" : "col td_even"}
+                  >
+                    {transection.Notes}
+                  </div>
+                  <div
+                    className={index % 2 == 0 ? "col td_odd" : "col td_even"}
+                  >
+                    <Link to={`/view/${transection.id}`}>view</Link>
+                  </div>
 
-                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
-                  <Link to={`/update/${transection.id}`}>update</Link>
-                </div>
+                  <div
+                    className={index % 2 == 0 ? "col td_odd" : "col td_even"}
+                  >
+                    <Link to={`/update/${transection.id}`}>update</Link>
+                  </div>
 
-                <div className={index % 2 == 0 ? "col td_odd" : "col td_even"}>
-                  <button onClick={() => deleteTransection(transection.id)}>
-                    Delete
-                  </button>
+                  <div
+                    className={index % 2 == 0 ? "col td_odd" : "col td_even"}
+                  >
+                    <button onClick={() => deleteTransection(transection.id)}>
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
       </div>
       <button onClick={() => handelClickOnPageNumbe(currentPageNo - 1)}>
         {"<<<<"}
       </button>
-      {Array(TOTAL_NUMBER_OF_PAGES)
+      {Array(Math.ceil(data.length / RECORD_PER_PAGE))
         .fill(0)
         .map((_, index) => {
           return (
@@ -304,5 +332,3 @@ export default function Tables({ local_Data, tableTitle }) {
     </>
   );
 }
-
-
