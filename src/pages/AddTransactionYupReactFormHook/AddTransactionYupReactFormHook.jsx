@@ -62,27 +62,6 @@ export const AddTransactionYupReactFormHook = ({
     ReceiptBase64: "",
     Notes: "",
   };
-  const initialFormErr = localFormValue
-    ? {
-        TransactionDate: "",
-        MonthYear: "",
-        TransactionType: "",
-        FromAccount: "",
-        ToAccount: "",
-        Amount: "",
-        Receipt: "",
-        Notes: "",
-      }
-    : {
-        TransactionDate: "*",
-        MonthYear: "*",
-        TransactionType: "*",
-        FromAccount: "*",
-        ToAccount: "*",
-        Amount: "*",
-        Receipt: "*",
-        Notes: "*",
-      };
 
   const [id, setId] = useState(0);
 
@@ -109,17 +88,34 @@ export const AddTransactionYupReactFormHook = ({
       .test(
         "required",
         "You need to provide a file",
-        (value) => value.length !== 0
+        (value) => {
+          if (!removeImage) {
+            return true;
+          }
+          
+          return value && value.length !== 0
+      }
       )
 
       .test("fileSize", "The file is too large", (value) => {
-        return value.length !== 0 && value[0].size < 1024 * 1024 * 1;
+
+        if (!removeImage) {
+          return true;
+        }
+        
+          return value.length !== 0 && value[0].size < 1024 * 1024 * 1;
+      
       })
       .test(
         "type",
         "Only the following formats are accepted: .jpeg, .jpg, .bmp, .pdf and .doc",
         (value) => {
+
+          if (!removeImage) {
+            return true;
+          }
           return (
+            value &&
             value.length !== 0 &&
             (value[0].type === "image/jpeg" || value[0].type === "image/png")
           );
@@ -134,12 +130,14 @@ export const AddTransactionYupReactFormHook = ({
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: initialFormValues,
   });
 
   const [removeImage, setRemoveImage] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    
     if (!isUpdate) {
       let id;
       if (localStorage.getItem("data")) {
@@ -150,17 +148,11 @@ export const AddTransactionYupReactFormHook = ({
         id = 1;
         setId(id);
       }
+    } else {
+      setId(initialFormValues.id);
     }
   }, []);
 
-  // const handelFile = async(File) => {
-  //   var reader = new FileReader();
-  //   reader.onload = function () {
-  //     let base64String = reader.result;
-  //     return  base64String;
-  //   };
-  //   reader.readAsDataURL(File);
-  // };
 
   const handelFile = (file) =>
     new Promise((resolve, reject) => {
@@ -175,19 +167,41 @@ export const AddTransactionYupReactFormHook = ({
   };
 
   const onSubmit = async (value) => {
-    
+    console.log("================================")
+    const localdata = JSON.parse(localStorage.getItem("data"));
+    if (isUpdate) {
+      if (removeImage) {
+        localdata[index] = {
+          ...value,
+          ReceiptBase64: await handelFile(value.Receipt[0]),
+          id,
+        };
+      } else {
+        localdata[index] = {
+          ...value,
+          ReceiptBase64: initialFormValues.ReceiptBase64,
+          id,
+        };
+      }
 
-    value = { ...value, ReceiptBase64: await handelFile(value.Receipt[0]), id };
-    delete value.Receipt;
+      localStorage.setItem("data", JSON.stringify([...localdata]));
+    } 
+    else {
+      value = {
+        ...value,
+        ReceiptBase64: await handelFile(value.Receipt[0]),
+        id,
+      };
+      delete value.Receipt;
+      localStorage.setItem("data", JSON.stringify([...localdata, value]));
+    }
 
-    const localdata = JSON.parse(localStorage.getItem("data"))
-    localStorage.setItem("data", JSON.stringify([...localdata,value]))
-    navigate("/")
-
+    navigate("/");
   };
 
   return (
     <div>
+      {console.table(errors)}
       <form onSubmit={handleSubmit(onSubmit)} method="POST">
         <div className="formContainer">
           <div className="input_div">
@@ -319,7 +333,7 @@ export const AddTransactionYupReactFormHook = ({
                   <>
                     <img
                       style={{ width: "200px" }}
-                      // src={formValue.ReceiptBase64}
+                      src={initialFormValues.ReceiptBase64}
                       alt="..."
                     />
 
