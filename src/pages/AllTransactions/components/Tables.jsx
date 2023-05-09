@@ -38,7 +38,7 @@ export default function Tables({ local_Data, tableTitle }) {
 
   const hanelSort = (field, type = "string") => {
     const cloneData = [...data];
-
+    setCurrentPageNo(0)
     switch (type) {
       case "string": {
         if (!(sort.key == field) || sort.sortDirection === "asc") {
