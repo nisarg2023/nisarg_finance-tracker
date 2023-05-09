@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -85,33 +85,26 @@ export const AddTransactionYupReactFormHook = ({
       .min("0", "amount in more then zero"),
     Receipt: yup
       .mixed()
-      .test(
-        "required",
-        "You need to provide a file",
-        (value) => {
-          if (!removeImage) {
-            return true;
-          }
-          
-          return value && value.length !== 0
-      }
-      )
-
-      .test("fileSize", "The file is too large", (value) => {
-
-        if (!removeImage) {
+      .test("required", "You need to provide a file", (value) => {
+        if (!removeImage && isUpdate) {
           return true;
         }
-        
-          return value.length !== 0 && value[0].size < 1024 * 1024 * 1;
-      
+
+        return value && value.length !== 0;
+      })
+
+      .test("fileSize", "The file is too large", (value) => {
+        if (!removeImage && isUpdate) {
+          return true;
+        }
+
+        return value.length !== 0 && value[0].size < 1024 * 1024 * 1;
       })
       .test(
         "type",
         "Only the following formats are accepted: .jpeg, .jpg, .bmp, .pdf and .doc",
         (value) => {
-
-          if (!removeImage) {
+          if (!removeImage && isUpdate) {
             return true;
           }
           return (
@@ -137,7 +130,6 @@ export const AddTransactionYupReactFormHook = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    
     if (!isUpdate) {
       let id;
       if (localStorage.getItem("data")) {
@@ -153,7 +145,6 @@ export const AddTransactionYupReactFormHook = ({
     }
   }, []);
 
-
   const handelFile = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -167,7 +158,7 @@ export const AddTransactionYupReactFormHook = ({
   };
 
   const onSubmit = async (value) => {
-    console.log("================================")
+    console.log("================================");
     const localdata = JSON.parse(localStorage.getItem("data"));
     if (isUpdate) {
       if (removeImage) {
@@ -185,8 +176,7 @@ export const AddTransactionYupReactFormHook = ({
       }
 
       localStorage.setItem("data", JSON.stringify([...localdata]));
-    } 
-    else {
+    } else {
       value = {
         ...value,
         ReceiptBase64: await handelFile(value.Receipt[0]),
