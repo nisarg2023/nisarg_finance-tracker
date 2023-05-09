@@ -1,5 +1,6 @@
-import React, {  useState } from "react";
+import React, {  useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { DataContext } from "../../App";
 import {
   ToAccount,
   FromAccount,
@@ -10,9 +11,10 @@ import Tables from "./components/Tables";
 
 export default function AllTransactions() {
 
+    const [contextLocaldata,setContextLocalData] = useContext(DataContext)
     const navigate = useNavigate();
     
-  let localData = JSON.parse(localStorage.getItem("data"));
+  let localData = contextLocaldata //JSON.parse(localStorage.getItem("data"));
   
   const [data, setData] = useState(localData);
 

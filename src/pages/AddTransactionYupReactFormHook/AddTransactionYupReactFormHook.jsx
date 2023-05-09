@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Link, useNavigate } from "react-router-dom";
+import { DataContext } from "../../App";
 
 export const MonthYear = [
   "Jan 2023",
@@ -50,6 +51,8 @@ export const AddTransactionYupReactFormHook = ({
   index,
   isUpdate,
 }) => {
+
+  const [contextLocaldata,setContextLocalData] = useContext(DataContext)
   const initialFormValues = localFormValue || {
     id: "",
     TransactionDate: "",
@@ -140,8 +143,8 @@ export const AddTransactionYupReactFormHook = ({
     
     if (!isUpdate) {
       let id;
-      if (localStorage.getItem("data")) {
-        let data = JSON.parse(localStorage.getItem("data"));
+      if (contextLocaldata.length!==0) {
+        let data = contextLocaldata //JSON.parse(localStorage.getItem("data"));
         id = data[data.length - 1].id + 1;
         setId(id);
       } else {
@@ -168,24 +171,26 @@ export const AddTransactionYupReactFormHook = ({
 
   const onSubmit = async (value) => {
     console.log("================================")
-    const localdata = JSON.parse(localStorage.getItem("data"));
+    const cloneContextData = [...contextLocaldata];
     if (isUpdate) {
       if (removeImage) {
-        localdata[index] = {
+        cloneContextData[index] = {
           ...value,
           ReceiptBase64: await handelFile(value.Receipt[0]),
           id,
         };
       } else {
-        localdata[index] = {
+        cloneContextData[index] = {
           ...value,
           ReceiptBase64: initialFormValues.ReceiptBase64,
           id,
         };
       }
 
-      localStorage.setItem("data", JSON.stringify([...localdata]));
+      //localStorage.setItem("data", JSON.stringify([...cloneContextData]));
+      setContextLocalData([...cloneContextData]);
     } 
+
     else {
       value = {
         ...value,
@@ -193,7 +198,11 @@ export const AddTransactionYupReactFormHook = ({
         id,
       };
       delete value.Receipt;
-      localStorage.setItem("data", JSON.stringify([...localdata, value]));
+      // localStorage.setItem(
+      //   "data",
+      //   JSON.stringify([...cloneContextData, value])
+      // );
+      setContextLocalData([...cloneContextData,value])
     }
 
     navigate("/");
@@ -201,7 +210,7 @@ export const AddTransactionYupReactFormHook = ({
 
   return (
     <div>
-      {console.table(errors)}
+     
       <form onSubmit={handleSubmit(onSubmit)} method="POST">
         <div className="formContainer">
           <div className="input_div">

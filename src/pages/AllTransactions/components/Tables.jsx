@@ -1,36 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { DataContext } from "../../../App";
 import "./style.css";
 
 export default function Tables({ local_Data, tableTitle }) {
+  
   const RECORD_PER_PAGE = 5;
   const TOTAL_NUMBER_OF_PAGES = Math.ceil(local_Data.length / RECORD_PER_PAGE);
   const [data, setData] = useState([]);
-  // const [currentPageData, setCurrentPageData] = useState([]);
+  const [searchData, setSearchData] = useState([]);
   const [currentPageNo, setCurrentPageNo] = useState(0);
   const [sort, setSort] = useState({ key: null, sortDirection: "asc" });
+  const [contextLocaldata,setContextLocalData] =  useContext(DataContext); 
 
   useEffect(() => {
     const tempData = local_Data;
-    // setData(tempData.slice(0, RECORD_PER_PAGE));
     setData(tempData);
+    setSearchData(tempData)
   }, [local_Data]);
 
   const handelClickOnPageNumbe = (current) => {
     if (!(current < 0 || current > TOTAL_NUMBER_OF_PAGES - 1)) {
-      // const tempData = local_Data;
-      // setData(
-      //   tempData.slice(
-      //     RECORD_PER_PAGE * current,
-      //     RECORD_PER_PAGE * current + RECORD_PER_PAGE
-      //   )
-      // );
-      // setCurrentPageData(
-      //   tempData.slice(
-      //     RECORD_PER_PAGE * current,
-      //     RECORD_PER_PAGE * current + RECORD_PER_PAGE
-      //   )
-      // );
+ 
       setCurrentPageNo(current);
     }
     
@@ -60,7 +51,7 @@ export default function Tables({ local_Data, tableTitle }) {
           setSort({ key: field, sortDirection: null });
         } else {
           // setData(currentPageData);
-          setData(cloneData);
+          setData(searchData);
 
           setSort({ key: field, sortDirection: "asc" });
         }
@@ -82,10 +73,8 @@ export default function Tables({ local_Data, tableTitle }) {
           setData(cloneData);
           setSort({ key: field, sortDirection: null });
         } else {
-          // setData(local_Data);
-          //handelClickOnPageNumbe(currentPageNo);
-          // setData(currentPageData);
-          setData(cloneData);
+        
+          setData(searchData);
           setSort({ key: field, sortDirection: "asc" });
         }
         break;
@@ -105,10 +94,8 @@ export default function Tables({ local_Data, tableTitle }) {
           setData(cloneData);
           setSort({ key: field, sortDirection: null });
         } else {
-          //setData(local_Data);
-          // handelClickOnPageNumbe(currentPageNo);
-          // setData(currentPageData);
-          setData(cloneData);
+       
+          setData(searchData);
           setSort({ key: field, sortDirection: "asc" });
         }
         break;
@@ -118,15 +105,13 @@ export default function Tables({ local_Data, tableTitle }) {
       }
     }
 
-    // setData(cloneData);
   };
 
   const handelSearch = (event) => {
     let tempdata = [...local_Data];
     setCurrentPageNo(0);
     const newData = tempdata.filter((e) => {
-      let a = Object.entries(e);
-      a = a.map((ez) => ez[1]);
+      let a = Object.values(e);
       a.splice(8, 1);
       a.splice(0, 1);
 
@@ -136,6 +121,7 @@ export default function Tables({ local_Data, tableTitle }) {
 
       return a.length !== 0 && e;
     });
+    setSearchData(newData);
     setData(newData);
   };
 
@@ -145,12 +131,10 @@ export default function Tables({ local_Data, tableTitle }) {
     cloneLocalData.splice(index, 1);
     setData(cloneLocalData);
 
-    const cloneLocalStorageData = JSON.parse(localStorage.getItem("data"));
-    const localStorageindex = cloneLocalStorageData.findIndex(
-      (e) => e.id === id
-    );
-    cloneLocalStorageData.splice(localStorageindex, 1);
-    localStorage.setItem("data", JSON.stringify(cloneLocalStorageData));
+    const cloneContextData = contextLocaldata;
+    const cloneIndex = cloneContextData.findIndex((e) => e.id === id);
+    cloneContextData.splice(cloneIndex, 1);
+    setContextLocalData(cloneContextData);
   };
 
   return (
