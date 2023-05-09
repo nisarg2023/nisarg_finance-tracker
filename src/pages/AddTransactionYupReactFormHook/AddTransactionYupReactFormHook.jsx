@@ -92,17 +92,21 @@ export const AddTransactionYupReactFormHook = ({
         "required",
         "You need to provide a file",
         (value) => {
-          if (!removeImage) {
+          
+
+          if (!removeImage && isUpdate) {
             return true;
           }
+
+          return value && value.length !== 0;
           
-          return value && value.length !== 0
+          
       }
       )
 
       .test("fileSize", "The file is too large", (value) => {
 
-        if (!removeImage) {
+        if (!removeImage && isUpdate) {
           return true;
         }
         
@@ -114,7 +118,7 @@ export const AddTransactionYupReactFormHook = ({
         "Only the following formats are accepted: .jpeg, .jpg, .bmp, .pdf and .doc",
         (value) => {
 
-          if (!removeImage) {
+          if (!removeImage && isUpdate) {
             return true;
           }
           return (
@@ -210,7 +214,7 @@ export const AddTransactionYupReactFormHook = ({
 
   return (
     <div>
-     
+      {console.table(errors)}
       <form onSubmit={handleSubmit(onSubmit)} method="POST">
         <div className="formContainer">
           <div className="input_div">
