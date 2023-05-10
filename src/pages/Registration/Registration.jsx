@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { CheckUserLoginContext, UserContext } from "../../App";
 
 export default function Registration() {
   const navigate = useNavigate();
@@ -15,15 +16,18 @@ export default function Registration() {
     password: "*",
   });
 
+  const [contextUsers,setContextUsers] = useContext(UserContext)
+  const [isUserLogin] = useContext(CheckUserLoginContext)
+
   useEffect(() => {
-    const isUserLoggedIn = JSON.parse(localStorage.getItem("isUserLoggedIn"));
+    const isUserLoggedIn = isUserLogin //JSON.parse(localStorage.getItem("isUserLoggedIn"));
     isUserLoggedIn ? navigate("/") : <></>;
 
-    const local_users = JSON.parse(localStorage.getItem("users"));
+    const local_users = contextUsers//JSON.parse(localStorage.getItem("users"));
     local_users ? setUsers(local_users) : setUsers([]);
 
     const id = local_users
-      ? JSON.parse(localStorage.getItem("users")).length + 1
+      ? contextUsers.length +1 //JSON.parse(localStorage.getItem("users")).length + 1
       : 1;
 
     setUser({ ...user, id: id });
@@ -80,13 +84,15 @@ export default function Registration() {
       const cloneUsers = users;
       console.log(user)
       cloneUsers.push(user);
-      localStorage.setItem("users", JSON.stringify(cloneUsers));
+      setContextUsers(cloneUsers)
+      //localStorage.setItem("users", JSON.stringify(cloneUsers));
       navigate("/login");
     }
   };
 
   return (
     <div>
+      
       <form
         onSubmit={(e) => {
           e.preventDefault();

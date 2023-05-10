@@ -1,17 +1,18 @@
 import React, {  useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { DataContext } from "../../App";
+import { CheckUserLoginContext, DataContext } from "../../App";
 import {
   ToAccount,
   FromAccount,
   TransactionType,
   MonthYear,
-} from "../AddTransaction/AddTransaction";
+} from "../../utils/constants";
 import Tables from "./components/Tables";
 
 export default function AllTransactions() {
 
     const [contextLocaldata,setContextLocalData] = useContext(DataContext)
+    const [isUserLogin, setIsUserLogin] = useContext(CheckUserLoginContext);
     const navigate = useNavigate();
     
   let localData = contextLocaldata //JSON.parse(localStorage.getItem("data"));
@@ -97,6 +98,7 @@ export default function AllTransactions() {
     <>
       <div>
         <Link to="/addtransaction">Add new Transection</Link>
+        {/* <Link to="/login">Login</Link> */}
 
         <select
           name="orderBy"
@@ -117,8 +119,9 @@ export default function AllTransactions() {
 
         <button
           onClick={() => {
-            localStorage.removeItem("isUserLoggedIn");
-            localStorage.removeItem("currentLoginuser");
+            setIsUserLogin(false);
+            //localStorage.removeItem("isUserLoggedIn");
+            //localStorage.removeItem("currentLoginuser");
             navigate("/login");
           }}
         >

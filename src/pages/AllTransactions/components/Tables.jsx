@@ -110,11 +110,17 @@ export default function Tables({ local_Data, tableTitle }) {
   const handelSearch = (event) => {
     let tempdata = [...local_Data];
     setCurrentPageNo(0);
+    
     const newData = tempdata.filter((e) => {
-      let a = Object.values(e);
-      a.splice(8, 1);
-      a.splice(0, 1);
+      const cloneE = { ...e };
+      delete cloneE.id;
+      delete cloneE.ReceiptBase64;
+      let a = Object.values(cloneE);
 
+      // a.splice(8, 1);
+      // a.splice(0, 1);
+
+     
       a = a.filter((ex) => {
         return ex.toUpperCase().includes(event.target.value.toUpperCase());
       });

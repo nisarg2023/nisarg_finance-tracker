@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { CheckUserLoginContext, UserContext } from "../../App";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -15,10 +16,13 @@ export default function Login() {
     password: "*",
   });
 
+  const [contextUsers, setContextUsers] = useContext(UserContext);
+  const [isUserLogin, setIsUserLogin] = useContext(CheckUserLoginContext);
+
   useEffect(() => {
-    const isUserLoggedIn = JSON.parse(localStorage.getItem("isUserLoggedIn"));
+    const isUserLoggedIn = isUserLogin//JSON.parse(localStorage.getItem("isUserLoggedIn"));
     isUserLoggedIn ? navigate("/") : <></>;
-    const local_users = JSON.parse(localStorage.getItem("users"));
+    const local_users = contextUsers//JSON.parse(localStorage.getItem("users"));
     users ? setUsers(local_users) : setUsers([]);
   }, []);
 
@@ -54,8 +58,10 @@ export default function Login() {
       const userData = users && users.find((user) => user.email === email.value);
 
       if (userData && userData.password === password.value) {
-        localStorage.setItem("isUserLoggedIn", true);
-        localStorage.setItem("currentLoginuser", JSON.stringify(userData));
+        //localStorage.setItem("isUserLoggedIn", true);
+        //localStorage.setItem("currentLoginuser", JSON.stringify(userData));
+      setIsUserLogin(true)
+    
         navigate("/");
       } else {
         setIsauthenticat(false);

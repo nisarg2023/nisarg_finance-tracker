@@ -5,14 +5,21 @@ import Registration from './pages/Registration/Registration';
 import Login from './pages/Login/Login';
 import ProtectedRouteComponent from './components/ProtectedRouteComponent';
 import { createContext, useState } from 'react';
-import {LOCAL_DATA}  from './utils/constants'
+import { LOCAL_DATA, USERS_DATA } from './utils/constants'
 
-export const DataContext = createContext()
+export const DataContext = createContext();
+export const UserContext = createContext();
+export const CheckUserLoginContext = createContext();
+
 
 function App() {
-   const [contextLocaldata,setContextLocalData] = useState( LOCAL_DATA )    
+  const [contextLocaldata, setContextLocalData] = useState(LOCAL_DATA);
+  const [contextUser, setContextUser] = useState(USERS_DATA);
+  const [isUserLogin, setIsUserLogin] = useState(false);    
 
   return (
+    <CheckUserLoginContext.Provider value={[isUserLogin, setIsUserLogin]}>
+      <UserContext.Provider value={[contextUser, setContextUser]}>
     <DataContext.Provider value={[contextLocaldata, setContextLocalData]}>
     <div className="App">
       <BrowserRouter>
@@ -24,6 +31,8 @@ function App() {
       </BrowserRouter>
     </div>
     </DataContext.Provider>
+      </UserContext.Provider>
+    </CheckUserLoginContext.Provider>
   );
 }
 

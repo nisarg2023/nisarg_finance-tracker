@@ -9,7 +9,8 @@ const [contextLocaldata, setContextLocalData] = useContext(DataContext);
     const { id } = useParams();
     const data = contextLocaldata//JSON.parse(localStorage.getItem("data"));
     const index = data && data.findIndex((ele) => ele.id == id);
-    delete data[index].Receipt;
+    
+    index >=0&& delete data[index].Receipt;
     
   return (
     <div>

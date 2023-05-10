@@ -1,3 +1,60 @@
+export const MonthYear = [
+    "Jan 2023",
+    "Feb 2023",
+    "Mar 2023",
+    "Arp 2023",
+    "May 2023",
+    "Jun 2023",
+    "Jul 2023",
+    "Aug 2023",
+    "Sep 2023",
+    "Oct 2023",
+    "Nov 2023",
+    "Des 2023",
+];
+
+export const TransactionType = [
+    "Transaction Type",
+    "Home Expense",
+    "Personal Expense",
+    "Income",
+];
+
+export const FromAccount = [
+    "Personal Account",
+    "Real Living",
+    "My Dream Home",
+    "Full Circle",
+    "Core Realtors",
+    "Big Block",
+];
+
+export const ToAccount = [
+    "Personal Account",
+    "Real Living",
+    "My Dream Home",
+    "Full Circle",
+    "Core Realtors",
+    "Big Block",
+];
+
+
+export const USERS_DATA = [
+    {
+        "userName": "nisarg",
+        "email": "nisarg@123.gmail.com",
+        "password": "123",
+        "id": 1
+    },
+    {
+        "userName": "nisarg",
+        "email": "nisaeg@gmail.com",
+        "password": "123",
+        "id": 2
+    }
+]
+
+
 export const LOCAL_DATA = [
     {
         "id": 1,

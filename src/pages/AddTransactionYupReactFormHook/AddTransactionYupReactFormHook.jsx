@@ -5,46 +5,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Link, useNavigate } from "react-router-dom";
 import { DataContext } from "../../App";
+import { FromAccount, MonthYear, ToAccount, TransactionType } from "../../utils/constants";
 
-export const MonthYear = [
-  "Jan 2023",
-  "Feb 2023",
-  "Mar 2023",
-  "Arp 2023",
-  "May 2023",
-  "Jun 2023",
-  "Jul 2023",
-  "Aug 2023",
-  "Sep 2023",
-  "Oct 2023",
-  "Nov 2023",
-  "Des 2023",
-];
 
-export const TransactionType = [
-  "Transaction Type",
-  "Home Expense",
-  "Personal Expense",
-  "Income",
-];
-
-export const FromAccount = [
-  "Personal Account",
-  "Real Living",
-  "My Dream Home",
-  "Full Circle",
-  "Core Realtors",
-  "Big Block",
-];
-
-export const ToAccount = [
-  "Personal Account",
-  "Real Living",
-  "My Dream Home",
-  "Full Circle",
-  "Core Realtors",
-  "Big Block",
-];
 
 export const AddTransactionYupReactFormHook = ({
   localFormValue,
@@ -214,7 +177,7 @@ export const AddTransactionYupReactFormHook = ({
 
   return (
     <div>
-      {console.table(errors)}
+      {/* {console.table(errors)} */}
       <form onSubmit={handleSubmit(onSubmit)} method="POST">
         <div className="formContainer">
           <div className="input_div">
@@ -237,11 +200,13 @@ export const AddTransactionYupReactFormHook = ({
             </div>
             <div className="right_div">
               <select name="MonthYear" {...register("MonthYear")}>
-                <option value="" desable selectde hidden>
+                <option value="" desable="true" selectde="true" hidden>
                   select
                 </option>
-                {MonthYear.map((val) => (
-                  <option value={val}>{val}</option>
+                {MonthYear.map((val, index) => (
+                  <option key={index} value={val}>
+                    {val}
+                  </option>
                 ))}
               </select>{" "}
               <span>{errors.MonthYear?.message}</span>
@@ -255,11 +220,13 @@ export const AddTransactionYupReactFormHook = ({
 
             <div className="right_div">
               <select name="TransactionType" {...register("TransactionType")}>
-                <option value="" desable selectde hidden>
+                <option value="" desable="true" selectde="true" hidden>
                   select
                 </option>
-                {TransactionType.map((val) => (
-                  <option value={val}>{val}</option>
+                {TransactionType.map((val, index) => (
+                  <option key={index} value={val}>
+                    {val}
+                  </option>
                 ))}
               </select>
               <span>{errors.TransactionType?.message}</span>
@@ -273,11 +240,13 @@ export const AddTransactionYupReactFormHook = ({
 
             <div className="right_div">
               <select name="FromAccount" {...register("FromAccount")}>
-                <option value="" desable selectde hidden>
+                <option value="" desable="true" selectde="true" hidden>
                   select
                 </option>
-                {FromAccount.map((val) => (
-                  <option value={val}>{val}</option>
+                {FromAccount.map((val, index) => (
+                  <option key={index} value={val}>
+                    {val}
+                  </option>
                 ))}
               </select>
               <span>{errors.FromAccount?.message}</span>
@@ -291,11 +260,13 @@ export const AddTransactionYupReactFormHook = ({
 
             <div className="right_div">
               <select name="ToAccount" {...register("ToAccount")}>
-                <option value="" desable selectde hidden>
+                <option value="" desable="true" selectde="true" hidden>
                   select
                 </option>
-                {ToAccount.map((val) => (
-                  <option value={val}>{val}</option>
+                {ToAccount.map((val, index) => (
+                  <option key={index} value={val}>
+                    {val}
+                  </option>
                 ))}
               </select>
               <span>{errors.ToAccount?.message}</span>

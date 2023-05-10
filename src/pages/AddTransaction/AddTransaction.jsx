@@ -1,45 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FromAccount, MonthYear, ToAccount, TransactionType } from "../../utils/constants";
 
-export const MonthYear = [
-  "Jan 2023",
-  "Feb 2023",
-  "Mar 2023",
-  "Arp 2023",
-  "May 2023",
-  "Jun 2023",
-  "Jul 2023",
-  "Aug 2023",
-  "Sep 2023",
-  "Oct 2023",
-  "Nov 2023",
-  "Des 2023",
-];
-
-export const TransactionType = [
-  "Transaction Type",
-  "Home Expense",
-  "Personal Expense",
-  "Income",
-];
-
-export const FromAccount = [
-  "Personal Account",
-  "Real Living",
-  "My Dream Home",
-  "Full Circle",
-  "Core Realtors",
-  "Big Block",
-];
-
-export const ToAccount = [
-  "Personal Account",
-  "Real Living",
-  "My Dream Home",
-  "Full Circle",
-  "Core Realtors",
-  "Big Block",
-];
 
 export default function AddTransaction({ localFormValue, index, isUpdate }) {
   const initialFormValues = localFormValue || {

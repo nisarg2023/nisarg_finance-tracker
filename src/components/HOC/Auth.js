@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { CheckUserLoginContext } from '../../App';
 
 
 
@@ -6,14 +7,15 @@ const withAuth = (ProtectedRouteComponent) => {
     
     
     return function EnhancedAuth(props) {
-        let isUserLogin = false
-        const data = JSON.parse(localStorage.getItem('isUserLoggedIn'))
+        const [isUserLogin, setIsUserLogin] = useContext(CheckUserLoginContext);
+        let islogin = false
+        const data = isUserLogin //JSON.parse(localStorage.getItem('isUserLoggedIn'))
         
-        if (data != null) {
-            isUserLogin = true            
+        if (data) {
+            islogin = true            
         }
     
-        return <ProtectedRouteComponent  {...props} isUserLogin={isUserLogin} />
+        return <ProtectedRouteComponent  {...props} isUserLogin={islogin} />
     }
      
 }
