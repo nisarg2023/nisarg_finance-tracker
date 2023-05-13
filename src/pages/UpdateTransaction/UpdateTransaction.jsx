@@ -6,7 +6,7 @@ import AddTransaction from '../AddTransaction/AddTransaction'
 import { AddTransactionYupReactFormHook } from '../AddTransactionYupReactFormHook/AddTransactionYupReactFormHook';
 
 export default function UpdateTransaction() {
-const [contextLocaldata, setContextLocalData] = useContext(DataContext);
+ //const [contextLocaldata, setContextLocalData] = useContext(DataContext);
     const { id } = useParams();
     const Transections  = useSelector(state=>state.Transections)
     const data = JSON.parse( JSON.stringify(Transections)) //contextLocaldata//JSON.parse(localStorage.getItem("data"));

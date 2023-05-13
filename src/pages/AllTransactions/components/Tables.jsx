@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { DataContext } from "../../../App";
+import { deleteTreanection } from "../../../duck/TransectionsSlice";
 import "./style.css";
 
 export default function Tables({ local_Data, tableTitle }) {
@@ -13,7 +15,8 @@ export default function Tables({ local_Data, tableTitle }) {
   const [originalData, setOriginalData] = useState([]);
   const [currentPageNo, setCurrentPageNo] = useState(0);
   const [sort, setSort] = useState({ key: null, sortDirection: "asc" });
-  const [contextLocaldata,setContextLocalData] =  useContext(DataContext); 
+ // const [contextLocaldata,setContextLocalData] =  useContext(DataContext); 
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const tempData = local_Data;
@@ -137,14 +140,17 @@ export default function Tables({ local_Data, tableTitle }) {
     cloneLocalData.splice(index, 1);
     setData(cloneLocalData);
     setOriginalData(cloneLocalData);
-    const cloneContextData = contextLocaldata;
-    const cloneIndex = cloneContextData.findIndex((e) => e.id === id);
-    cloneContextData.splice(cloneIndex, 1);
-    setContextLocalData(cloneContextData);
+
+    dispatch(deleteTreanection(id));
+    // const cloneContextData = contextLocaldata;
+    // const cloneIndex = cloneContextData.findIndex((e) => e.id === id);
+    // cloneContextData.splice(cloneIndex, 1);
+    // setContextLocalData(cloneContextData);
   };
 
   return (
     <>
+    
       <h3>{data.length !== 0 && data[0][tableTitle]}</h3>{" "}
       <input type="text" onChange={(e) => handelSearch(e)} />
       <div className="table">

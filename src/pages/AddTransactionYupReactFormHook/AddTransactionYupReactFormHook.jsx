@@ -10,7 +10,7 @@ import { TransactionDate } from "../../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addTreanection,
-  deleteTreanection,
+  updateTransection,
 } from "../../duck/TransectionsSlice";
 
 export const AddTransactionYupReactFormHook = ({
@@ -18,7 +18,7 @@ export const AddTransactionYupReactFormHook = ({
   index,
   isUpdate,
 }) => {
-  const [contextLocaldata, setContextLocalData] = useContext(DataContext);
+ // const [contextLocaldata, setContextLocalData] = useContext(DataContext);
   const initialFormValues = localFormValue || {
     id: "",
     TransactionDate: "",
@@ -104,7 +104,7 @@ export const AddTransactionYupReactFormHook = ({
   useEffect(() => {
     if (!isUpdate) {
       let id;
-      if (contextLocaldata.length !== 0) {
+      if (Transections.length !== 0) {
         let data = Transections; //contextLocaldata; //JSON.parse(localStorage.getItem("data"));
         id = data[data.length - 1].id + 1;
         setId(id);
@@ -131,7 +131,7 @@ export const AddTransactionYupReactFormHook = ({
 
   const onSubmit = async (value) => {
    
-    const cloneContextData = [...contextLocaldata];
+   // const cloneContextData = [...contextLocaldata];
     if (isUpdate) {
       if (removeImage) {
         // cloneContextData[index] = {
@@ -142,7 +142,7 @@ export const AddTransactionYupReactFormHook = ({
         const ReceiptBase64= await handelFile(value.Receipt[0]);
         delete value.Receipt;
           dispatch(
-            deleteTreanection({
+            updateTransection({
               index,
               data: {
                 ...value,
@@ -159,7 +159,7 @@ export const AddTransactionYupReactFormHook = ({
         // };
 
         dispatch(
-          deleteTreanection({
+          updateTransection({
             index,
             data: {
               ...value,
@@ -171,7 +171,7 @@ export const AddTransactionYupReactFormHook = ({
       }
 
       //localStorage.setItem("data", JSON.stringify([...cloneContextData]));
-      setContextLocalData([...cloneContextData]);
+      //setContextLocalData([...cloneContextData]);
     } else {
       value = {
         ...value,
@@ -192,7 +192,7 @@ export const AddTransactionYupReactFormHook = ({
 
   return (
     <div>
-      {/* {console.table(errors)} */}
+     
       <form onSubmit={handleSubmit(onSubmit)} method="POST">
         <div className="formContainer">
           <div className="input_div">

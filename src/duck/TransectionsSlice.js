@@ -13,11 +13,13 @@ export const TransectionSlice = createSlice({
           // console.table(...state)
         },
         deleteTreanection:(state,action)=>{
-            const {index,data} = action.payload
-            state[index] = data
+            return state.filter(ele=>ele.id !== action.payload)
+          
+            
         },
         updateTransection:(state,action)=>{
-            
+            const { index, data } = action.payload
+            state[index] = data
         }
 
     }

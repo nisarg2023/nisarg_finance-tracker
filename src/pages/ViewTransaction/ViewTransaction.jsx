@@ -1,13 +1,15 @@
 import React, { useContext } from 'react'
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom'
 import { DataContext } from '../../App'
 import './style.css'
 
 export default function ViewTransaction() {
 
-    const [contextLocaldata] = useContext(DataContext);
+    //const [contextLocaldata] = useContext(DataContext);
+    const Transections = useSelector(state=>state.Transections)
     const {id} = useParams()
-    const data = contextLocaldata; //JSON.parse(localStorage.getItem("data"));
+    const data = Transections//contextLocaldata; //JSON.parse(localStorage.getItem("data"));
     const [transection] =  data ? data.filter(ele => ele.id==id):[];
     
    

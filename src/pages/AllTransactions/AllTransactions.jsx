@@ -18,6 +18,7 @@ export default function AllTransactions() {
     const Transections = useSelector((state) => state.Transections);
     
   let localData = Transections;
+  
   //contextLocaldata 
   //JSON.parse(localStorage.getItem("data"));
   

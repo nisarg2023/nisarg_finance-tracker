@@ -15,15 +15,15 @@ export const CheckUserLoginContext = createContext();
 
 
 function App() {
-  const [contextLocaldata, setContextLocalData] = useState(LOCAL_DATA);
+  //const [contextLocaldata, setContextLocalData] = useState(LOCAL_DATA);
   const [contextUser, setContextUser] = useState(USERS_DATA);
   const [isUserLogin, setIsUserLogin] = useState(false);    
   
   return (
     <Provider store={store}>
     <CheckUserLoginContext.Provider value={[isUserLogin, setIsUserLogin]}>
-      <UserContext.Provider value={[contextUser, setContextUser]}>
-    <DataContext.Provider value={[contextLocaldata, setContextLocalData]}>
+    <UserContext.Provider value={[contextUser, setContextUser]}>
+    {/* <DataContext.Provider value={[contextLocaldata, setContextLocalData]}> */}
     <div className="App">
       <BrowserRouter>
         <Routes>
@@ -33,7 +33,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </div>
-    </DataContext.Provider>
+    {/* </DataContext.Provider> */}
       </UserContext.Provider>
     </CheckUserLoginContext.Provider>
     </Provider>
