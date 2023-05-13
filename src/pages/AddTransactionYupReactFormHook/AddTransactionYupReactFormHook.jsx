@@ -6,16 +6,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, useNavigate } from "react-router-dom";
 import { DataContext } from "../../App";
 import { FromAccount, MonthYear, ToAccount, TransactionType } from "../../utils/constants";
-
-
+import { TransactionDate } from "../../utils/constants";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTreanection,
+  deleteTreanection,
+} from "../../duck/TransectionsSlice";
 
 export const AddTransactionYupReactFormHook = ({
   localFormValue,
   index,
   isUpdate,
 }) => {
-
-  const [contextLocaldata,setContextLocalData] = useContext(DataContext)
+  const [contextLocaldata, setContextLocalData] = useContext(DataContext);
   const initialFormValues = localFormValue || {
     id: "",
     TransactionDate: "",
@@ -29,10 +32,13 @@ export const AddTransactionYupReactFormHook = ({
     Notes: "",
   };
 
+  const Transections = useSelector((state) => state.Transections);
+  const dispatch = useDispatch();
+
   const [id, setId] = useState(0);
 
   const schema = yup.object({
-    TransactionDate: yup.string().required("TransactionDate is required"),
+    TransactionDate,
     MonthYear: yup.string().required("select Month year"),
     TransactionType: yup.string().required("select transection type"),
     FromAccount: yup.string().required("select from account"),
@@ -51,36 +57,25 @@ export const AddTransactionYupReactFormHook = ({
       .min("0", "amount in more then zero"),
     Receipt: yup
       .mixed()
-      .test(
-        "required",
-        "You need to provide a file",
-        (value) => {
-          
-
-          if (!removeImage && isUpdate) {
-            return true;
-          }
-
-          return value && value.length !== 0;
-          
-          
-      }
-      )
-
-      .test("fileSize", "The file is too large", (value) => {
-
+      .test("required", "You need to provide a file", (value) => {
         if (!removeImage && isUpdate) {
           return true;
         }
-        
-          return value.length !== 0 && value[0].size < 1024 * 1024 * 1;
-      
+
+        return value && value.length !== 0;
+      })
+
+      .test("fileSize", "The file is too large", (value) => {
+        if (!removeImage && isUpdate) {
+          return true;
+        }
+
+        return value.length !== 0 && value[0].size < 1024 * 1024 * 1;
       })
       .test(
         "type",
         "Only the following formats are accepted: .jpeg, .jpg, .bmp, .pdf and .doc",
         (value) => {
-
           if (!removeImage && isUpdate) {
             return true;
           }
@@ -107,11 +102,10 @@ export const AddTransactionYupReactFormHook = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    
     if (!isUpdate) {
       let id;
-      if (contextLocaldata.length!==0) {
-        let data = contextLocaldata //JSON.parse(localStorage.getItem("data"));
+      if (contextLocaldata.length !== 0) {
+        let data = Transections; //contextLocaldata; //JSON.parse(localStorage.getItem("data"));
         id = data[data.length - 1].id + 1;
         setId(id);
       } else {
@@ -122,7 +116,6 @@ export const AddTransactionYupReactFormHook = ({
       setId(initialFormValues.id);
     }
   }, []);
-
 
   const handelFile = (file) =>
     new Promise((resolve, reject) => {
@@ -137,28 +130,49 @@ export const AddTransactionYupReactFormHook = ({
   };
 
   const onSubmit = async (value) => {
-    console.log("================================")
+   
     const cloneContextData = [...contextLocaldata];
     if (isUpdate) {
       if (removeImage) {
-        cloneContextData[index] = {
-          ...value,
-          ReceiptBase64: await handelFile(value.Receipt[0]),
-          id,
-        };
+        // cloneContextData[index] = {
+        //   ...value,
+        //   ReceiptBase64: await handelFile(value.Receipt[0]),
+        //   id,
+        // };
+        const ReceiptBase64= await handelFile(value.Receipt[0]);
+        delete value.Receipt;
+          dispatch(
+            deleteTreanection({
+              index,
+              data: {
+                ...value,
+                ReceiptBase64,
+                id,
+              },
+            })
+          );
       } else {
-        cloneContextData[index] = {
-          ...value,
-          ReceiptBase64: initialFormValues.ReceiptBase64,
-          id,
-        };
+        // cloneContextData[index] = {
+        //   ...value,
+        //   ReceiptBase64: initialFormValues.ReceiptBase64,
+        //   id,
+        // };
+
+        dispatch(
+          deleteTreanection({
+            index,
+            data: {
+              ...value,
+              ReceiptBase64: initialFormValues.ReceiptBase64,
+              id,
+            },
+          })
+        );
       }
 
       //localStorage.setItem("data", JSON.stringify([...cloneContextData]));
       setContextLocalData([...cloneContextData]);
-    } 
-
-    else {
+    } else {
       value = {
         ...value,
         ReceiptBase64: await handelFile(value.Receipt[0]),
@@ -169,7 +183,8 @@ export const AddTransactionYupReactFormHook = ({
       //   "data",
       //   JSON.stringify([...cloneContextData, value])
       // );
-      setContextLocalData([...cloneContextData,value])
+      dispatch(addTreanection(value));
+      // setContextLocalData([...cloneContextData, value]);
     }
 
     navigate("/");

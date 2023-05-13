@@ -23,11 +23,11 @@ function ProtectedRouteComponent(props) {
       {props.isUserLogin && (
         <Routes>
           {/* <Route path="/addtransaction" element={<AddTransaction />} /> */}
+          <Route path="/" element={<AllTransactions />} />
           <Route
             path="/addtransaction"
             element={<AddTransactionYupReactFormHook />}
           />
-          <Route path="/" element={<AllTransactions />} />
           <Route path="/view/:id" element={<ViewTransaction />} />
           <Route path="/update/:id" element={<UpdateTransaction />} />
         </Routes>

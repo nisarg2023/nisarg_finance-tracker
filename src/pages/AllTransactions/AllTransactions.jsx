@@ -1,4 +1,5 @@
 import React, {  useContext, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { CheckUserLoginContext, DataContext } from "../../App";
 import {
@@ -11,80 +12,66 @@ import Tables from "./components/Tables";
 
 export default function AllTransactions() {
 
-    const [contextLocaldata,setContextLocalData] = useContext(DataContext)
+    //const [contextLocaldata,setContextLocalData] = useContext(DataContext)
     const [isUserLogin, setIsUserLogin] = useContext(CheckUserLoginContext);
     const navigate = useNavigate();
+    const Transections = useSelector((state) => state.Transections);
     
-  let localData = contextLocaldata //JSON.parse(localStorage.getItem("data"));
+  let localData = Transections;
+  //contextLocaldata 
+  //JSON.parse(localStorage.getItem("data"));
   
   const [data, setData] = useState(localData);
 
   const [orderBy, setOrderBy] = useState([]);
   const [tableTitle, setTablrTitle] = useState(null);
 
+const helperOrderBy = (Arr, field) => {
+  const a = [];
+
+  Arr.map((transection) => {
+    return (
+      data &&
+      a.push(
+        data.filter((val) => {
+          return val[field] === transection;
+        })
+      )
+    );
+  });
+
+  return a;
+};
+
   const handelOrderBy = (e) => {
-    console.log(e.target.value);
+  
 
     const a = [];
-    setTablrTitle(e.target.value)
+    setTablrTitle(e.target.value);
+   
     switch (e.target.value) {
       case "MonthYear": {
-        MonthYear.map((transection) => {
-          return data && a.push(
-             data.filter((val) => {
-              return val[e.target.value] === transection;
-            })
-          );
-        });
-
+       a.push( ...helperOrderBy(MonthYear, e.target.value))
+      
         break;
       }
       case "TransactionType": {
-        TransactionType.map((transection) => {
-          return (
-            data &&
-            a.push(
-              data.filter((val) => {
-                return val[e.target.value] === transection;
-              })
-            )
-          );
-        });
-
+         a.push(...helperOrderBy(TransactionType, e.target.value));
         break;
       }
 
       case "ToAccount": {
-        ToAccount.map((transection) => {
-          return (
-            data &&
-            a.push(
-              data.filter((val) => {
-                return val[e.target.value] === transection;
-              })
-            )
-          );
-        });
-
+         a.push(...helperOrderBy(ToAccount, e.target.value));
         break;
       }
 
       case "FromAccount": {
-        FromAccount.map((transection) => {
-          return (
-            data &&
-            a.push(
-              data.filter((val) => {
-                return val[e.target.value] === transection;
-              })
-            )
-          );
-        });
-
+         a.push(...helperOrderBy(FromAccount, e.target.value));
+    
         break;
       }
       default: {
-        a.push(data)
+        a.push(data);
       }
     }
     

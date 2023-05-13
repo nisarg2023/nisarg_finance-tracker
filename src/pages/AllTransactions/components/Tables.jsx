@@ -5,10 +5,12 @@ import "./style.css";
 
 export default function Tables({ local_Data, tableTitle }) {
   
+
   const RECORD_PER_PAGE = 5;
   const TOTAL_NUMBER_OF_PAGES = Math.ceil(local_Data.length / RECORD_PER_PAGE);
   const [data, setData] = useState([]);
   const [searchData, setSearchData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
   const [currentPageNo, setCurrentPageNo] = useState(0);
   const [sort, setSort] = useState({ key: null, sortDirection: "asc" });
   const [contextLocaldata,setContextLocalData] =  useContext(DataContext); 
@@ -17,6 +19,8 @@ export default function Tables({ local_Data, tableTitle }) {
     const tempData = local_Data;
     setData(tempData);
     setSearchData(tempData)
+    setOriginalData(tempData);
+   
   }, [local_Data]);
 
   const handelClickOnPageNumbe = (current) => {
@@ -108,7 +112,7 @@ export default function Tables({ local_Data, tableTitle }) {
   };
 
   const handelSearch = (event) => {
-    let tempdata = [...local_Data];
+    let tempdata = [...originalData];
     setCurrentPageNo(0);
     
     const newData = tempdata.filter((e) => {
@@ -116,11 +120,7 @@ export default function Tables({ local_Data, tableTitle }) {
       delete cloneE.id;
       delete cloneE.ReceiptBase64;
       let a = Object.values(cloneE);
-
-      // a.splice(8, 1);
-      // a.splice(0, 1);
-
-     
+    
       a = a.filter((ex) => {
         return ex.toUpperCase().includes(event.target.value.toUpperCase());
       });
@@ -136,7 +136,7 @@ export default function Tables({ local_Data, tableTitle }) {
     const index = cloneLocalData.findIndex((e) => e.id === id);
     cloneLocalData.splice(index, 1);
     setData(cloneLocalData);
-
+    setOriginalData(cloneLocalData);
     const cloneContextData = contextLocaldata;
     const cloneIndex = cloneContextData.findIndex((e) => e.id === id);
     cloneContextData.splice(cloneIndex, 1);
@@ -292,7 +292,7 @@ export default function Tables({ local_Data, tableTitle }) {
             })}
       </div>
       <button onClick={() => handelClickOnPageNumbe(currentPageNo - 1)}>
-        {"<<<<"}
+        {"<=="}
       </button>
       {Array(Math.ceil(data.length / RECORD_PER_PAGE))
         .fill(0)
@@ -317,7 +317,7 @@ export default function Tables({ local_Data, tableTitle }) {
           );
         })}
       <button onClick={() => handelClickOnPageNumbe(currentPageNo + 1)}>
-        {">>>>"}
+        {"==>"}
       </button>
     </>
   );
