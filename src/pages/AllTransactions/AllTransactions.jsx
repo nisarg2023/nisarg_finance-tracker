@@ -1,7 +1,8 @@
 import React, {  useContext, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { CheckUserLoginContext, DataContext } from "../../App";
+import { setUserIsLogin } from "../../duck/IsUserLoginSlices";
 import {
   ToAccount,
   FromAccount,
@@ -13,9 +14,10 @@ import Tables from "./components/Tables";
 export default function AllTransactions() {
 
     //const [contextLocaldata,setContextLocalData] = useContext(DataContext)
-    const [isUserLogin, setIsUserLogin] = useContext(CheckUserLoginContext);
+   // const [isUserLogin, setIsUserLogin] = useContext(CheckUserLoginContext);
     const navigate = useNavigate();
     const Transections = useSelector((state) => state.Transections);
+    const dispatch = useDispatch();
     
   let localData = Transections;
   
@@ -107,7 +109,8 @@ const helperOrderBy = (Arr, field) => {
 
         <button
           onClick={() => {
-            setIsUserLogin(false);
+            dispatch(setUserIsLogin(false));
+            // setIsUserLogin(false);
             //localStorage.removeItem("isUserLoggedIn");
             //localStorage.removeItem("currentLoginuser");
             navigate("/login");

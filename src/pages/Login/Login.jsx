@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { CheckUserLoginContext, UserContext } from "../../App";
+import { setUserIsLogin } from "../../duck/IsUserLoginSlices";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -16,13 +18,16 @@ export default function Login() {
     password: "*",
   });
 
-  const [contextUsers, setContextUsers] = useContext(UserContext);
-  const [isUserLogin, setIsUserLogin] = useContext(CheckUserLoginContext);
+  //const [contextUsers, setContextUsers] = useContext(UserContext);
+ // const [isUserLogin, setIsUserLogin] = useContext(CheckUserLoginContext);
+  const Users =  useSelector(state =>state.Users);
+  const isUserLogin = useSelector((state) => state.checkIsUserLogin.value);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const isUserLoggedIn = isUserLogin//JSON.parse(localStorage.getItem("isUserLoggedIn"));
     isUserLoggedIn ? navigate("/") : <></>;
-    const local_users = contextUsers//JSON.parse(localStorage.getItem("users"));
+    const local_users = Users//contextUsers//JSON.parse(localStorage.getItem("users"));
     users ? setUsers(local_users) : setUsers([]);
   }, []);
 
@@ -60,7 +65,8 @@ export default function Login() {
       if (userData && userData.password === password.value) {
         //localStorage.setItem("isUserLoggedIn", true);
         //localStorage.setItem("currentLoginuser", JSON.stringify(userData));
-      setIsUserLogin(true)
+      //setIsUserLogin(true)
+      dispatch(setUserIsLogin(true));
     
         navigate("/");
       } else {

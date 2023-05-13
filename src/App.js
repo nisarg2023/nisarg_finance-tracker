@@ -21,8 +21,8 @@ function App() {
   
   return (
     <Provider store={store}>
-    <CheckUserLoginContext.Provider value={[isUserLogin, setIsUserLogin]}>
-    <UserContext.Provider value={[contextUser, setContextUser]}>
+    {/* <CheckUserLoginContext.Provider value={[isUserLogin, setIsUserLogin]}> */}
+    {/* <UserContext.Provider value={[contextUser, setContextUser]}> */}
     {/* <DataContext.Provider value={[contextLocaldata, setContextLocalData]}> */}
     <div className="App">
       <BrowserRouter>
@@ -34,8 +34,8 @@ function App() {
       </BrowserRouter>
     </div>
     {/* </DataContext.Provider> */}
-      </UserContext.Provider>
-    </CheckUserLoginContext.Provider>
+      {/* </UserContext.Provider> */}
+    {/* </CheckUserLoginContext.Provider> */}
     </Provider>
   );
 }

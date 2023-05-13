@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { CheckUserLoginContext, UserContext } from "../../App";
+import { addUser } from "../../duck/usersSlice";
 
 export default function Registration() {
   const navigate = useNavigate();
@@ -16,18 +18,21 @@ export default function Registration() {
     password: "*",
   });
 
-  const [contextUsers,setContextUsers] = useContext(UserContext)
-  const [isUserLogin] = useContext(CheckUserLoginContext)
+  //const [contextUsers, setContextUsers] = useContext(UserContext);
+  const Users = useSelector((state) => state.Users);
+  const dispatch = useDispatch();
+  const isUserLogin = useSelector((state) => state.checkIsUserLogin.value);
+  //const [isUserLogin] = useContext(CheckUserLoginContext);
 
   useEffect(() => {
-    const isUserLoggedIn = isUserLogin //JSON.parse(localStorage.getItem("isUserLoggedIn"));
+    const isUserLoggedIn = isUserLogin; //JSON.parse(localStorage.getItem("isUserLoggedIn"));
     isUserLoggedIn ? navigate("/") : <></>;
 
-    const local_users = contextUsers//JSON.parse(localStorage.getItem("users"));
+    const local_users = Users; //contextUsers//JSON.parse(localStorage.getItem("users"));
     local_users ? setUsers(local_users) : setUsers([]);
 
     const id = local_users
-      ? contextUsers.length +1 //JSON.parse(localStorage.getItem("users")).length + 1
+      ? Users.length + 1 //JSON.parse(localStorage.getItem("users")).length + 1
       : 1;
 
     setUser({ ...user, id: id });
@@ -54,9 +59,8 @@ export default function Registration() {
   };
 
   const isEmailAlreadyExists = (element) => {
-   
     const email = users.find(({ email }) => element.value.trim() === email);
- console.log(email);
+
     if (email) {
       setUserErr((prev) => {
         return { ...prev, [element.name]: "this email already exists" };
@@ -81,10 +85,12 @@ export default function Registration() {
     isFormValid = !isEmailAlreadyExists(email) && isFormValid;
 
     if (isFormValid) {
-      const cloneUsers = users;
-      console.log(user)
-      cloneUsers.push(user);
-      setContextUsers(cloneUsers)
+      // const cloneUsers = users;
+      // console.log(user)
+      // cloneUsers.push(user);
+
+      dispatch(addUser(user));
+      // setContextUsers(cloneUsers)
       //localStorage.setItem("users", JSON.stringify(cloneUsers));
       navigate("/login");
     }
@@ -92,7 +98,6 @@ export default function Registration() {
 
   return (
     <div>
-      
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -154,10 +159,10 @@ export default function Registration() {
           </div>
 
           <input type="submit" value="Registration" />
-        <p>
-          {" "}
-          Don't have Acount ? <Link to="/login">login</Link>
-        </p>
+          <p>
+            {" "}
+            Don't have Acount ? <Link to="/login">login</Link>
+          </p>
         </div>
       </form>
     </div>
