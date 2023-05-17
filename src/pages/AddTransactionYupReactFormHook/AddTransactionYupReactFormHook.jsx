@@ -168,7 +168,8 @@ export const AddTransactionYupReactFormHook = ({
 
   const onSubmit = async (value) => {
     console.log("================================")
-    const localdata = JSON.parse(localStorage.getItem("data"));
+    const localdata = JSON.parse(localStorage.getItem("data")) ||[];
+    console.log(JSON.parse(localStorage.getItem("data")));
     if (isUpdate) {
       if (removeImage) {
         localdata[index] = {
